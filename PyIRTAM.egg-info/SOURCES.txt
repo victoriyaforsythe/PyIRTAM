@@ -1,0 +1,16 @@
+.zenodo.json
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.cfg
+PyIRTAM/__init__.py
+PyIRTAM/main_library.py
+PyIRTAM.egg-info/PKG-INFO
+PyIRTAM.egg-info/SOURCES.txt
+PyIRTAM..egg-info/dependency_links.txt
+PyIRTAM..egg-info/requires.txt
+PyIRTAM..egg-info/top_level.txt
