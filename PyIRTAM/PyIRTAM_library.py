@@ -7,8 +7,9 @@
 
 import datetime as dt
 import numpy as np
-import PyIRI
 import os
+
+import PyIRI
 import PyIRI.main_library as ml
 
 def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
