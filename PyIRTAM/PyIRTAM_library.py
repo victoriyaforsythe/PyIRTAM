@@ -355,7 +355,6 @@ def IRTAM_gamma(G, D, F_B0, F_B1, F_foF2, F_hmF2):
 
     Parameters
     ----------
-
     G : array-like
         Global functions for F2 region.
     D : array-like
