@@ -5,12 +5,11 @@
 # This work was supported by the Office of Naval Research.
 # --------------------------------------------------------
 
+import datetime as dt
+import numpy as np
 import PyIRI
 import PyIRI.main_library as ml
-import numpy as np
 import os
-import datetime as dt
-
 
 def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     """Output ionospheric parameters from daily set of IRTAM coefficients.
@@ -852,7 +851,7 @@ def Ramakrishnan_Rawer_function(NmF2, hmF2, B0, B1, h):
 
 def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
                      modip, TOV, coeff_dir, irtam_dir):
-    """Updates parameters and builds EDP for IRTAM for one time frame.
+    """Update parameters and build EDP for IRTAM for one time frame.
 
     Parameters
     ----------
@@ -1021,7 +1020,7 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
 
 
 def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
-    """Updates parameters and builds EDP for IRTAM for one time frame.
+    """Update parameters and build EDP for IRTAM for one time frame.
 
     Parameters
     ----------
