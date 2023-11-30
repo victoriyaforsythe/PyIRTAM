@@ -4,13 +4,26 @@
 # Distribution is unlimited.
 # This work was supported by the Office of Naval Research.
 # --------------------------------------------------------
+"""This library contains components for PyIRTAM software.
+
+References
+----------
+Forsythe et al. (2023), PyIRI: Whole-Globe Approach to the
+International Reference Ionosphere Modeling Implemented in Python,
+Space Weather, ESS Open Archive, September 28, 2023.
+
+Bilitza et al. (2022), The International Reference Ionosphere
+model: A review and description of an ionospheric benchmark, Reviews
+of Geophysics, 60.
+
+"""
 
 import datetime as dt
 import numpy as np
 import os
-
 import PyIRI
 import PyIRI.main_library as ml
+
 
 def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     """Output ionospheric parameters from daily set of IRTAM coefficients.
@@ -212,7 +225,6 @@ def IRTAM_read_coeff(dtime, coeff_dir):
         IRTAM coefficients for F2 frequency.
     F_hmf2_IRTAM : array-like
         IRTAM coefficients for F2 peak height.
-
 
     Notes
     -----
