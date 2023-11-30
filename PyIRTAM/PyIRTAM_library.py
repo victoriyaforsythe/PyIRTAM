@@ -8,8 +8,8 @@
 import datetime as dt
 import numpy as np
 import PyIRI
-import PyIRI.main_library as ml
 import os
+import PyIRI.main_library as ml
 
 def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     """Output ionospheric parameters from daily set of IRTAM coefficients.
