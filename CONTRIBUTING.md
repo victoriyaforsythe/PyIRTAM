@@ -2,8 +2,8 @@ Contributing
 ============
 
 Bug reports, feature suggestions, and other contributions are greatly
-appreciated!  PyIRTAM is a community-driven project and welcomes both feedback and
-contributions.
+appreciated!  PyIRTAM is a community-driven project and welcomes both feedback
+and contributions.
 
 Short version
 -------------
@@ -16,8 +16,8 @@ Short version
 Bug reports
 -----------
 
-When [reporting a bug](https://github.com/victoriyaforsythe/PyIRTAM/issues) please
-include:
+When [reporting a bug](https://github.com/victoriyaforsythe/PyIRTAM/issues)
+please include:
 
 * Your operating system name and version
 
@@ -99,7 +99,8 @@ To set up `PyIRTAM` for local development:
 
 10. Submit a pull request through the GitHub website. Pull requests should be
    made to the ``develop`` branch.  Note that automated tests will be run on
-   github actions, but these must be initialized by a member of the PyIRTAM team.
+   GitHub Actions, but these must be initialized by a member of the PyIRTAM
+   team.
 
 Pull Request Guidelines
 -----------------------
