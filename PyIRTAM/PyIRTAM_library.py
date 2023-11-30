@@ -9,7 +9,6 @@ import PyIRI
 import PyIRI.main_library as ml
 import numpy as np
 import os
-from fortranformat import FortranRecordReader
 import datetime as dt
 
 
@@ -240,8 +239,6 @@ def IRTAM_read_coeff(dtime, coeff_dir):
     in ionospheric mapping 476 by numerical methods.
 
     """
-    # pull the predefined sizes of the function extensions
-    coef = IRTAM_highest_power_of_extension()
 
     # IRTAM coefficients:
     # the file has first 988 numbers in same format as CCIR
@@ -250,44 +247,43 @@ def IRTAM_read_coeff(dtime, coeff_dir):
     # B0
     file_B0 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                            dtime.strftime('%m%d'),
-                           ('IRTAM_B0in_COEFFS_' +
-                            dtime.strftime('%Y%m%d') +
-                            '_' +
-                            dtime.strftime('%H%M%S') +
-                            '.ASC'))
+                           ('IRTAM_B0in_COEFFS_'
+                            + dtime.strftime('%Y%m%d')
+                            + '_'
+                            + dtime.strftime('%H%M%S') + '.ASC'))
 
     F_B0 = IRTAM_read_files(file_B0)
 
     # B1
     file_B1 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                            dtime.strftime('%m%d'),
-                           ('IRTAM_B1in_COEFFS_' +
-                            dtime.strftime('%Y%m%d') +
-                            '_' +
-                            dtime.strftime('%H%M%S') +
-                            '.ASC'))
+                           ('IRTAM_B1in_COEFFS_'
+                            + dtime.strftime('%Y%m%d')
+                            + '_'
+                            + dtime.strftime('%H%M%S')
+                            + '.ASC'))
 
     F_B1 = IRTAM_read_files(file_B1)
 
     # f0F2
     file_f0F2 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                              dtime.strftime('%m%d'),
-                             ('IRTAM_foF2_COEFFS_' +
-                              dtime.strftime('%Y%m%d') +
-                              '_' +
-                              dtime.strftime('%H%M%S') +
-                              '.ASC'))
+                             ('IRTAM_foF2_COEFFS_'
+                              + dtime.strftime('%Y%m%d')
+                              + '_'
+                              + dtime.strftime('%H%M%S')
+                              + '.ASC'))
 
     F_f0F2 = IRTAM_read_files(file_f0F2)
 
     # hmF2
     file_hmF2 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                              dtime.strftime('%m%d'),
-                             ('IRTAM_hmF2_COEFFS_' +
-                              dtime.strftime('%Y%m%d') +
-                              '_' +
-                              dtime.strftime('%H%M%S') +
-                              '.ASC'))
+                             ('IRTAM_hmF2_COEFFS_'
+                              + dtime.strftime('%Y%m%d')
+                              + '_'
+                              + dtime.strftime('%H%M%S')
+                              + '.ASC'))
 
     F_hmF2 = IRTAM_read_files(file_hmF2)
 
@@ -315,7 +311,6 @@ def IRTAM_read_files(filename):
 
     """
     file_F = open(filename, mode='r')
-    fmt = FortranRecordReader('(1X,4E15.8)')
     full_array = []
     for line in file_F:
         if line[0] != '#':
@@ -331,8 +326,6 @@ def IRTAM_read_files(filename):
 
     # For IRTAM: reshape array to [nj, nk] shape
     F_CCIR = np.zeros((coef['nj']['F0F2'], coef['nk']['F0F2']))
-
-    F_CCIR_add = np.zeros((coef['nk']['F0F2']))
 
     F_CCIR_like = np.reshape(array_main, F_CCIR.shape, order='F')
 
@@ -427,7 +420,6 @@ def IRTAM_highest_power_of_extension():
     """
     # Degree of extension
     QM_F0F2 = [12, 12, 9, 5, 2, 1, 1, 1, 1]
-    QM_IRTAM = [12, 12, 9, 5, 2, 1, 1, 1, 1]
     QM_M3000 = [7, 8, 6, 3, 2, 1, 1]
     QM_Es_upper = [11, 12, 6, 3, 1]
     QM_Es_median = [11, 13, 7, 3, 1, 1]
@@ -595,9 +587,8 @@ def IRTAM_F2_top_thickness(foF2, hmF2, B_0, F107):
     # Effective sunspot number
     R12 = ml.F107_2_R12(F107)
 
-    k = (3.22 - 0.0538 * foF2 - 0.00664 * hmF2 +
-         (0.113 * hmF2 / B_0) +
-         0.00257 * R12)
+    k = (3.22 - 0.0538 * foF2 - 0.00664 * hmF2
+         + (0.113 * hmF2 / B_0) + 0.00257 * R12)
 
     # Auxiliary parameters x and v:
     x = (k * B_0 - 150.) / 100.
@@ -641,8 +632,6 @@ def IRTAM_reconstruct_density_from_parameters(F2, F1, E, alt):
     """
     s = F2['Nm'].shape
     N_G = s[1]
-    N_V = alt.size
-
     x = np.full((12, N_G), np.nan)
 
     x[0, :] = F2['Nm'][0, :]
@@ -700,7 +689,6 @@ def IRTAM_EDP_builder(x, aalt):
     nalt = aalt.size
 
     # Empty arrays
-    density_out = np.zeros((nalt, ngrid))
     density_F2 = np.zeros((nalt, ngrid))
     density_F1 = np.zeros((nalt, ngrid))
     density_E = np.zeros((nalt, ngrid))
@@ -779,9 +767,9 @@ def IRTAM_EDP_builder(x, aalt):
 
     # when F1 is present-----------------------------------------
     # F2 bottom down to F1
-    a = np.where((np.isfinite(a_NmF1)) &
-                 (a_alt < a_hmF2) &
-                 (a_alt >= a_hmF1))
+    a = np.where((np.isfinite(a_NmF1))
+                 & (a_alt < a_hmF2)
+                 & (a_alt >= a_hmF1))
     density_F2[a] = Ramakrishnan_Rawer_function(a_NmF2[a], a_hmF2[a],
                                                 a_B0[a], a_B1[a],
                                                 a_alt[a])
@@ -801,9 +789,9 @@ def IRTAM_EDP_builder(x, aalt):
                                               a_alt[a]) * drop_2[a]
 
     # When F1 is not present(hard boundaries)--------------------
-    a = np.where((np.isnan(a_NmF1)) &
-                 (a_alt < a_hmF2) &
-                 (a_alt > a_hmE))
+    a = np.where((np.isnan(a_NmF1))
+                 & (a_alt < a_hmF2)
+                 & (a_alt > a_hmE))
     drop_1[a] = 1. - ((a_alt[a] - a_hmE[a]) / (a_hmF2[a] - a_hmE[a]))**4.
     drop_2[a] = 1. - ((a_hmF2[a] - a_alt[a]) / (a_hmF2[a] - a_hmE[a]))**4.
     density_E[a] = ml.epstein_function_array(a_A3[a],
@@ -955,7 +943,7 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
 
     """
     # Find time index
-    UT = dtime.hour + dtime.minute/60. + dtime.second/3600.
+    UT = dtime.hour + dtime.minute / 60. + dtime.second / 3600.
     it = np.where(aUT == UT)[0]
 
     # Find IRTAM parameters
