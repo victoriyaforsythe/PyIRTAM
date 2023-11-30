@@ -12,6 +12,7 @@ import os
 from fortranformat import FortranRecordReader
 import datetime as dt
 
+
 def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     """Output ionospheric parameters from daily set of IRTAM coefficients.
 
@@ -324,18 +325,17 @@ def IRTAM_read_files(filename):
 
     array_main = full_array[0:988]
     array_add = full_array[988:]
-    
+
     # Pull the predefined sizes of the function extensions
     coef = IRTAM_highest_power_of_extension()
 
     # For IRTAM: reshape array to [nj, nk] shape
     F_CCIR = np.zeros((coef['nj']['F0F2'], coef['nk']['F0F2']))
-    
+
     F_CCIR_add = np.zeros((coef['nk']['F0F2']))
-    
+
     F_CCIR_like = np.reshape(array_main, F_CCIR.shape, order='F')
-    
-    
+
     # Insert column between 0 and 1, for additional b0 coefficients
     F_IRTAM = np.zeros((coef['nj']['IRTAM'], coef['nk']['IRTAM']))
     F_IRTAM[0, :] = F_CCIR_like[0, :]
@@ -1146,10 +1146,13 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
     # First, determine the standard PyIRI parameters for the day of interest
     # It is better to do it in the beginning (outside the time loop),
     # so that PyIRI is called only once for the whole day.
-    
+
     # Use CCIR (not URSI) since IRTAM uses CCIR models.
     ccir_or_ursi = 0  # 0 = CCIR, 1 = URSI
-    
+
+    # Coefficient direction from PyIRI
+    coef_dir = PyIRI.coeff_dir
+
     # Run PyIRI
     f2_b, f1_b, e_b, es_b, sun, mag, edp_b = ml.IRI_density_1day(year,
                                                                  month,
@@ -1159,19 +1162,19 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
                                                                  alat,
                                                                  aalt,
                                                                  F107,
-                                                                 PyIRI.coeff_dir,
+                                                                 coef_dir,
                                                                  ccir_or_ursi)
 
     # Create empty dictionaries to store daily parameters.
     empt = np.array([])
-    f2_day = {'Nm':empt, 'hm':empt, 'B0':empt, 'B1':empt, 'B_top':empt}
-    f1_day = {'Nm':empt, 'hm':empt, 'B_bot':empt}
-    e_day = {'Nm':empt, 'hm':empt, 'B_bot':empt, 'B_top':empt}
-    es_day = {'Nm':empt, 'hm':empt, 'B_bot':empt, 'B_top':empt}
+    f2_day = {'Nm': empt, 'hm': empt, 'B0': empt, 'B1': empt, 'B_top': empt}
+    f1_day = {'Nm': empt, 'hm': empt, 'B_bot': empt}
+    e_day = {'Nm': empt, 'hm': empt, 'B_bot': empt, 'B_top': empt}
+    es_day = {'Nm': empt, 'hm': empt, 'B_bot': empt, 'B_top': empt}
     edp_day = edp_b * 0.
     f1_day['P'] = f1_b['P']
 
-    for it in range(0, aUT.size):  
+    for it in range(0, aUT.size):
         # Dtime for one time frame
         hour = int(np.fix(aUT[it]))
         minute = int((aUT[it] - hour) * 60.)
@@ -1201,15 +1204,17 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
                 e_day[key] = E[key][:]
             for key in Es:
                 es_day[key] = Es[key][:]
-        else:       
+        else:
             for key in F2:
-                f2_day[key] = np.concatenate((f2_day[key], F2[key][:]), axis = 0)
+                f2_day[key] = np.concatenate((f2_day[key], F2[key][:]), axis=0)
             for key in F1:
-                f1_day[key] = np.concatenate((f1_day[key], F1[key][:]), axis = 0)
+                f1_day[key] = np.concatenate((f1_day[key], F1[key][:]), axis=0)
             for key in E:
-                e_day[key] = np.concatenate((e_day[key], E[key][:]), axis = 0)
+                e_day[key] = np.concatenate((e_day[key], E[key][:]), axis=0)
             for key in Es:
-                es_day[key] = np.concatenate((es_day[key], Es[key][:]), axis = 0)
+                es_day[key] = np.concatenate((es_day[key], Es[key][:]),
+                                             axis=0)
         edp_day[it, :, :] = EDP
-
-    return f2_b, f1_b, e_b, es_b, sun, mag, edp_b, f2_day, f1_day, e_day, es_day, edp_day
+    res = (f2_b, f1_b, e_b, es_b, sun, mag, edp_b, f2_day,
+           f1_day, e_day, es_day, edp_day)
+    return res
