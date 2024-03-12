@@ -4,6 +4,19 @@
 # Distribution is unlimited.
 # This work was supported by the Office of Naval Research.
 # --------------------------------------------------------
+"""This library contains components for PyIRTAM software.
+
+References
+----------
+Forsythe et al. (2023), PyIRI: Whole-Globe Approach to the
+International Reference Ionosphere Modeling Implemented in Python,
+Space Weather, ESS Open Archive, September 28, 2023.
+
+Bilitza et al. (2022), The International Reference Ionosphere
+model: A review and description of an ionospheric benchmark, Reviews
+of Geophysics, 60.
+
+"""
 
 import datetime as dt
 import numpy as np
@@ -214,7 +227,6 @@ def IRTAM_read_coeff(dtime, coeff_dir):
     F_hmf2_IRTAM : array-like
         IRTAM coefficients for F2 peak height.
 
-
     Notes
     -----
     This function reads U_jk coefficients (from IRTAM and Es maps).
@@ -330,7 +342,6 @@ def IRTAM_gamma(G, D, F_B0, F_B1, F_foF2, F_hmF2):
 
     Parameters
     ----------
-
     G : array-like
         Global functions for F2 region.
     D : array-like
@@ -573,7 +584,6 @@ def IRTAM_F2_top_thickness(foF2, hmF2, B_0, F107):
     # Shape parameter depends on solar activity:
     # Effective sunspot number
     R12 = ml.F107_2_R12(F107)
-
     k = (3.22 - 0.0538 * foF2 - 0.00664 * hmF2 + (0.113 * hmF2 / B_0)
          + 0.00257 * R12)
 
@@ -827,7 +837,7 @@ def Ramakrishnan_Rawer_function(NmF2, hmF2, B0, B1, h):
 
 def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
                      modip, TOV, coeff_dir, irtam_dir):
-    """Updates parameters and builds EDP for IRTAM for one time frame.
+    """Update parameters and build EDP for IRTAM for one time frame.
 
     Parameters
     ----------
@@ -996,7 +1006,7 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
 
 
 def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
-    """Updates parameters and builds EDP for IRTAM for one time frame.
+    """Update parameters and build EDP for IRTAM for one time frame.
 
     Parameters
     ----------
