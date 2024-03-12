@@ -5,12 +5,13 @@
 # This work was supported by the Office of Naval Research.
 # --------------------------------------------------------
 
-import PyIRI
-import PyIRI.main_library as ml
+import datetime as dt
 import numpy as np
 import os
-from fortranformat import FortranRecordReader
-import datetime as dt
+
+import PyIRI
+import PyIRI.main_library as ml
+
 
 def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     """Output ionospheric parameters from daily set of IRTAM coefficients.
@@ -61,12 +62,12 @@ def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     Space Weather.
 
     """
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     # Calculate geographic Jones and Gallet (JG) functions F_G for the given
     # grid and corresponding map of modip angles
     G_IRTAM = IRTAM_set_gl_G(alon, alat, modip)
 
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     # Calculate diurnal Fourier functions F_D for the given time array aUT
     # create time array that matches IRTAM files (15 min)
 
@@ -74,11 +75,11 @@ def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     aUT = np.array([dtime.hour + dtime.minute / 60.])
     D_IRTAM = IRTAM_diurnal_functions(aUT, TOV)
 
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     # Read IRTAM coefficients and form matrix U
     F_B0, F_B1, F_f0F2, F_hmF2 = IRTAM_read_coeff(dtime, irtam_dir)
 
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     # Multiply matrices (F_D U)F_G
     B0, B1, foF2, hmF2 = IRTAM_gamma(G_IRTAM, D_IRTAM,
                                      F_B0, F_B1, F_f0F2, F_hmF2)
@@ -86,7 +87,7 @@ def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     # Limit B1 values (same as in IRI) to prevent ugly thin profiles:
     B1 = np.clip(B1, 1., 6.)
     B0 = np.clip(B0, 1., 350.)
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------------
     # Add all parameters to dictionaries:
     F2 = {'B0': B0,
           'B1': B1,
@@ -239,54 +240,37 @@ def IRTAM_read_coeff(dtime, coeff_dir):
     in ionospheric mapping 476 by numerical methods.
 
     """
-    # pull the predefined sizes of the function extensions
-    coef = IRTAM_highest_power_of_extension()
-
     # IRTAM coefficients:
     # the file has first 988 numbers in same format as CCIR
     # followed by 76 coefficients for the additional diurnal term
+    time_str = ''.join([dtime.strftime('%Y%m%d'), '_', dtime.strftime('%H%M%S'),
+                        '.ASC'])
 
     # B0
     file_B0 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                            dtime.strftime('%m%d'),
-                           ('IRTAM_B0in_COEFFS_' +
-                            dtime.strftime('%Y%m%d') +
-                            '_' +
-                            dtime.strftime('%H%M%S') +
-                            '.ASC'))
+                           ('IRTAM_B0in_COEFFS_' + time_str))
 
     F_B0 = IRTAM_read_files(file_B0)
 
     # B1
     file_B1 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                            dtime.strftime('%m%d'),
-                           ('IRTAM_B1in_COEFFS_' +
-                            dtime.strftime('%Y%m%d') +
-                            '_' +
-                            dtime.strftime('%H%M%S') +
-                            '.ASC'))
+                           ('IRTAM_B1in_COEFFS_' + time_str))
 
     F_B1 = IRTAM_read_files(file_B1)
 
     # f0F2
     file_f0F2 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                              dtime.strftime('%m%d'),
-                             ('IRTAM_foF2_COEFFS_' +
-                              dtime.strftime('%Y%m%d') +
-                              '_' +
-                              dtime.strftime('%H%M%S') +
-                              '.ASC'))
+                             ('IRTAM_foF2_COEFFS_' + time_str))
 
     F_f0F2 = IRTAM_read_files(file_f0F2)
 
     # hmF2
     file_hmF2 = os.path.join(coeff_dir, dtime.strftime('%Y'),
                              dtime.strftime('%m%d'),
-                             ('IRTAM_hmF2_COEFFS_' +
-                              dtime.strftime('%Y%m%d') +
-                              '_' +
-                              dtime.strftime('%H%M%S') +
-                              '.ASC'))
+                             ('IRTAM_hmF2_COEFFS_' + time_str))
 
     F_hmF2 = IRTAM_read_files(file_hmF2)
 
@@ -313,29 +297,25 @@ def IRTAM_read_files(filename):
     This function reads IRTAM file and outputs [14, 96] array.
 
     """
-    file_F = open(filename, mode='r')
-    fmt = FortranRecordReader('(1X,4E15.8)')
+    # Read in the file
     full_array = []
-    for line in file_F:
-        if line[0] != '#':
-            line_vals = np.fromstring(line, dtype=float, sep=' ')
-            full_array = np.concatenate((full_array, line_vals), axis=None)
-    file_F.close()
+    with open(filename, mode='r') as file_f:
+        for line in file_f:
+            if line[0] != '#':
+                line_vals = np.fromstring(line, dtype=float, sep=' ')
+                full_array = np.concatenate((full_array, line_vals), axis=None)
 
+    # Assign the file input into separate arrays
     array_main = full_array[0:988]
     array_add = full_array[988:]
-    
+
     # Pull the predefined sizes of the function extensions
     coef = IRTAM_highest_power_of_extension()
 
     # For IRTAM: reshape array to [nj, nk] shape
     F_CCIR = np.zeros((coef['nj']['F0F2'], coef['nk']['F0F2']))
-    
-    F_CCIR_add = np.zeros((coef['nk']['F0F2']))
-    
     F_CCIR_like = np.reshape(array_main, F_CCIR.shape, order='F')
-    
-    
+
     # Insert column between 0 and 1, for additional b0 coefficients
     F_IRTAM = np.zeros((coef['nj']['IRTAM'], coef['nk']['IRTAM']))
     F_IRTAM[0, :] = F_CCIR_like[0, :]
@@ -427,7 +407,6 @@ def IRTAM_highest_power_of_extension():
     """
     # Degree of extension
     QM_F0F2 = [12, 12, 9, 5, 2, 1, 1, 1, 1]
-    QM_IRTAM = [12, 12, 9, 5, 2, 1, 1, 1, 1]
     QM_M3000 = [7, 8, 6, 3, 2, 1, 1]
     QM_Es_upper = [11, 12, 6, 3, 1]
     QM_Es_median = [11, 13, 7, 3, 1, 1]
@@ -590,14 +569,13 @@ def IRTAM_F2_top_thickness(foF2, hmF2, B_0, F107):
 
     """
 
-    # B_F2_top..................................................................
+    # B_F2_top................................................................
     # Shape parameter depends on solar activity:
     # Effective sunspot number
     R12 = ml.F107_2_R12(F107)
 
-    k = (3.22 - 0.0538 * foF2 - 0.00664 * hmF2 +
-         (0.113 * hmF2 / B_0) +
-         0.00257 * R12)
+    k = (3.22 - 0.0538 * foF2 - 0.00664 * hmF2 + (0.113 * hmF2 / B_0)
+         + 0.00257 * R12)
 
     # Auxiliary parameters x and v:
     x = (k * B_0 - 150.) / 100.
@@ -641,10 +619,8 @@ def IRTAM_reconstruct_density_from_parameters(F2, F1, E, alt):
     """
     s = F2['Nm'].shape
     N_G = s[1]
-    N_V = alt.size
 
     x = np.full((12, N_G), np.nan)
-
     x[0, :] = F2['Nm'][0, :]
     x[1, :] = F1['Nm'][0, :]
     x[2, :] = E['Nm'][0, :]
@@ -677,7 +653,7 @@ def IRTAM_EDP_builder(x, aalt):
 
     Returns
     -------
-    density_out : array-like
+    density : array-like
         3-D electron density [N_T, N_V, N_G] in m-3.
 
     Notes
@@ -700,7 +676,6 @@ def IRTAM_EDP_builder(x, aalt):
     nalt = aalt.size
 
     # Empty arrays
-    density_out = np.zeros((nalt, ngrid))
     density_F2 = np.zeros((nalt, ngrid))
     density_F1 = np.zeros((nalt, ngrid))
     density_E = np.zeros((nalt, ngrid))
@@ -765,26 +740,19 @@ def IRTAM_EDP_builder(x, aalt):
 
     # F2 top (same for yes F1 and no F1)
     a = np.where(a_alt >= a_hmF2)
-    density_F2[a] = ml.epstein_function_top_array(a_A1[a],
-                                                  a_hmF2[a],
-                                                  a_B_F2_top[a],
-                                                  a_alt[a])
+    density_F2[a] = ml.epstein_function_top_array(a_A1[a], a_hmF2[a],
+                                                  a_B_F2_top[a], a_alt[a])
 
     # E bottom (same for yes F1 and no F1)
     a = np.where(a_alt <= a_hmE)
-    density_E[a] = ml.epstein_function_array(a_A3[a],
-                                             a_hmE[a],
-                                             a_B_E_bot[a],
+    density_E[a] = ml.epstein_function_array(a_A3[a], a_hmE[a], a_B_E_bot[a],
                                              a_alt[a])
 
     # when F1 is present-----------------------------------------
     # F2 bottom down to F1
-    a = np.where((np.isfinite(a_NmF1)) &
-                 (a_alt < a_hmF2) &
-                 (a_alt >= a_hmF1))
+    a = np.where((np.isfinite(a_NmF1)) & (a_alt < a_hmF2) & (a_alt >= a_hmF1))
     density_F2[a] = Ramakrishnan_Rawer_function(a_NmF2[a], a_hmF2[a],
-                                                a_B0[a], a_B1[a],
-                                                a_alt[a])
+                                                a_B0[a], a_B1[a], a_alt[a])
 
     # E top plus F1 bottom (hard boundaries)
     a = np.where((a_alt > a_hmE) & (a_alt < a_hmF1))
@@ -801,23 +769,18 @@ def IRTAM_EDP_builder(x, aalt):
                                               a_alt[a]) * drop_2[a]
 
     # When F1 is not present(hard boundaries)--------------------
-    a = np.where((np.isnan(a_NmF1)) &
-                 (a_alt < a_hmF2) &
-                 (a_alt > a_hmE))
-    drop_1[a] = 1. - ((a_alt[a] - a_hmE[a]) / (a_hmF2[a] - a_hmE[a]))**4.
-    drop_2[a] = 1. - ((a_hmF2[a] - a_alt[a]) / (a_hmF2[a] - a_hmE[a]))**4.
-    density_E[a] = ml.epstein_function_array(a_A3[a],
-                                             a_hmE[a],
-                                             a_B_E_top[a],
+    a = np.where((np.isnan(a_NmF1)) & (a_alt < a_hmF2) & (a_alt > a_hmE))
+    drop_1[a] = 1.0 - ((a_alt[a] - a_hmE[a]) / (a_hmF2[a] - a_hmE[a]))**4.0
+    drop_2[a] = 1.0 - ((a_hmF2[a] - a_alt[a]) / (a_hmF2[a] - a_hmE[a]))**4.0
+    density_E[a] = ml.epstein_function_array(a_A3[a], a_hmE[a], a_B_E_top[a],
                                              a_alt[a]) * drop_1[a]
 
-    density_F2[a] = Ramakrishnan_Rawer_function(a_NmF2[a], a_hmF2[a],
-                                                a_B0[a], a_B1[a],
-                                                a_alt[a]) * drop_2[a]
+    density_F2[a] = Ramakrishnan_Rawer_function(a_NmF2[a], a_hmF2[a], a_B0[a],
+                                                a_B1[a], a_alt[a]) * drop_2[a]
     density = density_F2 + density_F1 + density_E
 
     # Make 1 everything that is <= 0
-    density[np.where(density <= 1)] = 1.
+    density[np.where(density <= 1.0)] = 1.0
 
     return density
 
@@ -955,7 +918,7 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
 
     """
     # Find time index
-    UT = dtime.hour + dtime.minute/60. + dtime.second/3600.
+    UT = dtime.hour + dtime.minute / 60.0 + dtime.second / 3600.0
     it = np.where(aUT == UT)[0]
 
     # Find IRTAM parameters
@@ -1146,32 +1109,25 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
     # First, determine the standard PyIRI parameters for the day of interest
     # It is better to do it in the beginning (outside the time loop),
     # so that PyIRI is called only once for the whole day.
-    
+
     # Use CCIR (not URSI) since IRTAM uses CCIR models.
     ccir_or_ursi = 0  # 0 = CCIR, 1 = URSI
-    
+
     # Run PyIRI
-    f2_b, f1_b, e_b, es_b, sun, mag, edp_b = ml.IRI_density_1day(year,
-                                                                 month,
-                                                                 day,
-                                                                 aUT,
-                                                                 alon,
-                                                                 alat,
-                                                                 aalt,
-                                                                 F107,
-                                                                 PyIRI.coeff_dir,
-                                                                 ccir_or_ursi)
+    f2_b, f1_b, e_b, es_b, sun, mag, edp_b = ml.IRI_density_1day(
+        year, month, day, aUT, alon, alat, aalt, F107, PyIRI.coeff_dir,
+        ccir_or_ursi)
 
     # Create empty dictionaries to store daily parameters.
     empt = np.array([])
-    f2_day = {'Nm':empt, 'hm':empt, 'B0':empt, 'B1':empt, 'B_top':empt}
-    f1_day = {'Nm':empt, 'hm':empt, 'B_bot':empt}
-    e_day = {'Nm':empt, 'hm':empt, 'B_bot':empt, 'B_top':empt}
-    es_day = {'Nm':empt, 'hm':empt, 'B_bot':empt, 'B_top':empt}
+    f2_day = {'Nm': empt, 'hm': empt, 'B0': empt, 'B1': empt, 'B_top': empt}
+    f1_day = {'Nm': empt, 'hm': empt, 'B_bot': empt}
+    e_day = {'Nm': empt, 'hm': empt, 'B_bot': empt, 'B_top': empt}
+    es_day = {'Nm': empt, 'hm': empt, 'B_bot': empt, 'B_top': empt}
     edp_day = edp_b * 0.
     f1_day['P'] = f1_b['P']
 
-    for it in range(0, aUT.size):  
+    for it in range(0, aUT.size):
         # Dtime for one time frame
         hour = int(np.fix(aUT[it]))
         minute = int((aUT[it] - hour) * 60.)
@@ -1201,15 +1157,16 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
                 e_day[key] = E[key][:]
             for key in Es:
                 es_day[key] = Es[key][:]
-        else:       
+        else:
             for key in F2:
-                f2_day[key] = np.concatenate((f2_day[key], F2[key][:]), axis = 0)
+                f2_day[key] = np.concatenate((f2_day[key], F2[key][:]), axis=0)
             for key in F1:
-                f1_day[key] = np.concatenate((f1_day[key], F1[key][:]), axis = 0)
+                f1_day[key] = np.concatenate((f1_day[key], F1[key][:]), axis=0)
             for key in E:
-                e_day[key] = np.concatenate((e_day[key], E[key][:]), axis = 0)
+                e_day[key] = np.concatenate((e_day[key], E[key][:]), axis=0)
             for key in Es:
-                es_day[key] = np.concatenate((es_day[key], Es[key][:]), axis = 0)
+                es_day[key] = np.concatenate((es_day[key], Es[key][:]), axis=0)
         edp_day[it, :, :] = EDP
 
-    return f2_b, f1_b, e_b, es_b, sun, mag, edp_b, f2_day, f1_day, e_day, es_day, edp_day
+    return (f2_b, f1_b, e_b, es_b, sun, mag, edp_b, f2_day, f1_day, e_day,
+            es_day, edp_day)
