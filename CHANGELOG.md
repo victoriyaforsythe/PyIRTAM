@@ -5,6 +5,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 ## 0.0.3 (03-20-2024)
 * Fixed import bug, changing the name of the primary sub-module
 * Added an error catch for bad IRTAM directory input and unit tests for this
+* Added badges to the README
 
 ## 0.0.2 (03-18-2024)
 * Added community documents
