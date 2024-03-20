@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # --------------------------------------------------------
+"""Unit tests for PyIRTAM.lib functions."""
 
 import datetime as dt
 import os
