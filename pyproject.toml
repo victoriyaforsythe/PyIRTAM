@@ -46,6 +46,7 @@ test = [
   "flake8",
   "flake8-docstrings",
   "hacking >= 1.0",
+  "pytest"
 ]
 doc = [
   "extras_require",
