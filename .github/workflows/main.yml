@@ -53,8 +53,7 @@ jobs:
     - name: Test with pytest
       run: pytest --cov=PyIRTAM
 
-# TODO(# 1): uncomment when coveralls added
-#    - name: Publish results to coveralls
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      run: coveralls --rcfile=pyproject.toml --service=github
+    - name: Publish results to coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: coveralls --rcfile=pyproject.toml --service=github
