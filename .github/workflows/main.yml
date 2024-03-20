@@ -48,12 +48,12 @@ jobs:
       run: flake8 . --count --exit-zero --max-complexity=10 --statistics
 
     - name: Test import success
-      run: python -c "import PyIRI; print(PyIRI.__version__)"
+      run: python -c "import PyIRTAM; print(PyIRTAM.__version__)"
 
-# TODO(# 1): uncomment when unit tests added
-#    - name: Test with pytest
-#      run: pytest --cov=PyIRTAM
-#
+    - name: Test with pytest
+      run: pytest --cov=PyIRTAM
+
+# TODO(# 1): uncomment when coveralls added
 #    - name: Publish results to coveralls
 #      env:
 #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
