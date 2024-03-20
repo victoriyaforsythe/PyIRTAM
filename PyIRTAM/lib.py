@@ -304,11 +304,20 @@ def IRTAM_read_files(filename):
     F_IRTAM : array-like
         Array of IRTAM coefficients.
 
+    Raises
+    ------
+    IOError
+        If filename is unknown
+
     Notes
     -----
     This function reads IRTAM file and outputs [14, 96] array.
 
     """
+    # Test that the desired file exists
+    if not os.path.isfile(filename):
+        raise IOError('unknown IRTAM coefficient file: {:}'.format(filename))
+
     # Read in the file
     full_array = []
     with open(filename, mode='r') as file_f:
