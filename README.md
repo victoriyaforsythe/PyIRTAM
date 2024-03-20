@@ -4,6 +4,7 @@
 
 [![PyPI Package latest release](https://img.shields.io/pypi/v/PyIRTAM.svg)](https://pypi.org/project/PyIRTAM/)
 [![Build Status](https://github.com/victoriyaforsythe/PyIRTAM/actions/workflows/main.yml/badge.svg)](https://github.com/victoriyaforsythe/PyIRTAM/actions/workflows/main.yml)
+[![Coverage Status](https://coveralls.io/repos/github/victoriyaforsythe/PyIRTAM/badge.svg?branch=rc_v0.0.3)](https://coveralls.io/github/victoriyaforsythe/PyIRTAM?branch=rc_v0.0.3)
 [![Documentation Status](https://readthedocs.org/projects/pyirtam/badge/?version=latest)](https://pyirtam.readthedocs.io/en/latest/?badge=latest)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10844522.svg)](https://doi.org/10.5281/zenodo.10844522)
 
