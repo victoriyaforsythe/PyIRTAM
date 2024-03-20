@@ -2,7 +2,10 @@
 
 # PyIRTAM
 
+[![PyPI Package latest release](https://img.shields.io/pypi/v/PyIRTAM.svg)](https://pypi.org/project/PyIRTAM/)
+[![Build Status](https://github.com/victoriyaforsythe/PyIRTAM/actions/workflows/main.yml/badge.svg)](https://github.com/victoriyaforsythe/PyIRTAM/actions/workflows/main.yml)
 [![Documentation Status](https://readthedocs.org/projects/pyirtam/badge/?version=latest)](https://pyirtam.readthedocs.io/en/latest/?badge=latest)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10844522.svg)](https://doi.org/10.5281/zenodo.10844522)
 
 Python tool for processing IRTAM coefficients that evaluates ionospheric
 parameters and electron density on the entire given global grid and for the
