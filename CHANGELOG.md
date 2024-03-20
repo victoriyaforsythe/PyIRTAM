@@ -2,7 +2,7 @@
 All notable changes to this project are documented in this file. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
-## 0.0.2 (XX-XX-XX)
+## 0.0.2 (03-18-2024)
 * Added community documents
 * Added .zenodo.json file
 * Added readthedocs build support and badges
