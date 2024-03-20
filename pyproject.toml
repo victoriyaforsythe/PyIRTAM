@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PyIRTAM"
-version = "0.0.2"
+version = "0.0.3"
 description = "Python tool for IRTAM using PyIRI"
 readme = "README.md"
 requires-python = ">=3.9"
