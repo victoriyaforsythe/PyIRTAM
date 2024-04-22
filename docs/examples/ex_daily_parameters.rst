@@ -15,7 +15,7 @@ and for all desired diurnal time frames.
    import PyIRI
    import PyIRTAM
    import PyIRI.main_library as ml
-   import PyIRTAM.main_library as il
+   import PyIRTAM.lib as il
    import PyIRI.plotting as plot
 
 2. Specify a year, a month, and a day:
