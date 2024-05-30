@@ -37,6 +37,7 @@ dependencies = [
   "matplotlib",
   "numpy",
   "pyiri",
+  "requests",
   "scipy"
 ]
 
