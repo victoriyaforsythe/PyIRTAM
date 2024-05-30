@@ -25,8 +25,11 @@ import os
 import PyIRI
 import PyIRI.main_library as ml
 
+from PyIRTAM import coeff
 
-def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
+
+def IRTAM_density(dtime, alon, alat, modip, TOV, irtam_dir='',
+                  use_subdirs=True):
     """Output ionospheric parameters from daily set of IRTAM coefficients.
 
     Parameters
@@ -45,10 +48,13 @@ def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
         Modified dip angle in degrees.
     TOV : float
         Time of Validity for IRtAM coefficients (use 24 if unknown).
-    coeff_dir : str
-        Place where model coefficients are located.
     irtam_dir : str
-        Place where IRTAM coefficients are located (user provided).
+        Directory for IRTAM coefficients, or '' to use package directory.
+        (default='')
+    use_subdirs : bool
+        If True, adds YYYY/MMDD subdirectories to the filename path, if False
+        assumes that the entire path to the coefficient directory is provided
+        by `irtam_dir` (default=True)
 
     Returns
     -------
@@ -90,7 +96,7 @@ def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
 
     # ------------------------------------------------------------------------
     # Read IRTAM coefficients and form matrix U
-    F_B0, F_B1, F_f0F2, F_hmF2 = IRTAM_read_coeff(dtime, irtam_dir)
+    F_B0, F_B1, F_f0F2, F_hmF2 = IRTAM_read_coeff(dtime, irtam_dir, use_subdirs)
 
     # ------------------------------------------------------------------------
     # Multiply matrices (F_D U)F_G
@@ -98,8 +104,8 @@ def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
                                      F_B0, F_B1, F_f0F2, F_hmF2)
 
     # Limit B1 values (same as in IRI) to prevent ugly thin profiles:
-    B1 = np.clip(B1, 1., 6.)
-    B0 = np.clip(B0, 1., 350.)
+    B1 = np.clip(B1, 1.0, 6.0)
+    B0 = np.clip(B0, 1.0, 350.0)
     # ------------------------------------------------------------------------
     # Add all parameters to dictionaries:
     F2 = {'B0': B0,
@@ -206,7 +212,7 @@ def IRTAM_diurnal_functions(time_array, TOV):
     return D
 
 
-def IRTAM_read_coeff(dtime, coeff_dir):
+def IRTAM_read_coeff(dtime, coeff_dir='', use_subdirs=True):
     """Read coefficients from IRTAM.
 
     Parameters
@@ -214,17 +220,22 @@ def IRTAM_read_coeff(dtime, coeff_dir):
     dtime : int
         Month.
     coeff_dir : str
-        Place where the coefficient files are.
+        Directory for IRTAM coefficients, or '' to use package directory.
+        (default='')
+    use_subdirs : bool
+        If True, adds YYYY/MMDD subdirectories to the filename path, if False
+        assumes that the entire path to the coefficient directory is provided
+        by `irtam_dir` (default=True)
 
     Returns
     -------
-    F_B0_IRTAM : array-like
+    b0_irtam : array-like
         IRTAM coefficients for B0 thickness.
-    F_B1_IRTAM : array-like
+    b1_irtam : array-like
         IRTAM coefficients for B1 thickness.
-    F_fof2_IRTAM : array-like
+    fof2_irtam : array-like
         IRTAM coefficients for F2 frequency.
-    F_hmf2_IRTAM : array-like
+    hmf2_irtam : array-like
         IRTAM coefficients for F2 peak height.
 
     Notes
@@ -252,43 +263,33 @@ def IRTAM_read_coeff(dtime, coeff_dir):
     in ionospheric mapping 476 by numerical methods.
 
     """
-    # IRTAM coefficients:
-    # the file has first 988 numbers in same format as CCIR
-    # followed by 76 coefficients for the additional diurnal term
-    time_str = ''.join([dtime.strftime('%Y%m%d'), '_', dtime.strftime('%H%M%S'),
-                        '.ASC'])
-
+    # IRTAM coefficient files have the first 988 numbers in same format as CCIR
+    # followed by 76 coefficients for the additional diurnal term. Load the
+    # parameter data into arrays from the various files.
+    #
     # B0
-    file_B0 = os.path.join(coeff_dir, dtime.strftime('%Y'),
-                           dtime.strftime('%m%d'),
-                           ('IRTAM_B0in_COEFFS_' + time_str))
-
-    F_B0 = IRTAM_read_files(file_B0)
+    file_b0 = coeff.get_irtam_param_filename(dtime, 'B0', irtam_dir=coeff_dir,
+                                             use_subdirs=use_subdirs)
+    b0_irtam = IRTAM_read_files(file_b0)
 
     # B1
-    file_B1 = os.path.join(coeff_dir, dtime.strftime('%Y'),
-                           dtime.strftime('%m%d'),
-                           ('IRTAM_B1in_COEFFS_' + time_str))
-
-    F_B1 = IRTAM_read_files(file_B1)
+    file_b1 = coeff.get_irtam_param_filename(dtime, 'B1', irtam_dir=coeff_dir,
+                                             use_subdirs=use_subdirs)
+    b1_irtam = IRTAM_read_files(file_b1)
 
     # f0F2
-    file_f0F2 = os.path.join(coeff_dir, dtime.strftime('%Y'),
-                             dtime.strftime('%m%d'),
-                             ('IRTAM_foF2_COEFFS_' + time_str))
-
-    F_f0F2 = IRTAM_read_files(file_f0F2)
+    file_f0f2 = coeff.get_irtam_param_filename(dtime, 'foF2',
+                                               irtam_dir=coeff_dir,
+                                               use_subdirs=use_subdirs)
+    f0f2_irtam = IRTAM_read_files(file_f0f2)
 
     # hmF2
-    file_hmF2 = os.path.join(coeff_dir, dtime.strftime('%Y'),
-                             dtime.strftime('%m%d'),
-                             ('IRTAM_hmF2_COEFFS_' + time_str))
+    file_hmf2 = coeff.get_irtam_param_filename(dtime, 'hmF2',
+                                               irtam_dir=coeff_dir,
+                                               use_subdirs=use_subdirs)
+    hmf2_irtam = IRTAM_read_files(file_hmf2)
 
-    F_hmF2 = IRTAM_read_files(file_hmF2)
-
-    output = (F_B0, F_B1, F_f0F2, F_hmF2)
-
-    return output
+    return b0_irtam, b1_irtam, f0f2_irtam, hmf2_irtam
 
 
 def IRTAM_read_files(filename):
