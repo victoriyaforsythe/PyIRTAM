@@ -9,9 +9,9 @@ Prerequisites
 PyIRTAM uses the Python modules included in the list below. This module
 officially supports Python 3.9+.
 
-1. fortranformat
-2. matplotlib
-3. numpy
+1. numpy
+2. PyIRI
+3. requests
 
 
 Installation Options
