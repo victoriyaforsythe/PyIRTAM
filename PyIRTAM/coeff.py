@@ -56,10 +56,10 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
         irtam_dir = PyIRTAM.irtam_coeff_dir
 
     # Determine the appropriate output filename
-    param_file = get_irtam_param_filename(dtime, param, irtam_dir)
+    param_file = get_irtam_param_filename(dtime, param, irtam_dir, use_subdirs)
 
     # Ensure the desired output directory exists
-    dir_name, _ = os.path.split(param_file)
+    dir_name = os.path.dirname(param_file)
 
     if not os.path.isdir(dir_name):
         os.makedirs(dir_name)
@@ -70,6 +70,8 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
         msg = 'IRTAM parameter coefficient file exists: {:}'.format(param_file)
         if not overwrite:
             return dstat, fstat, msg
+        else:
+            msg = "".join(["Overwriting ", msg])
 
     # Construct the query
     base_url = "https://lgdc.uml.edu/rix/gambit-coeffs"
