@@ -846,7 +846,7 @@ def Ramakrishnan_Rawer_function(NmF2, hmF2, B0, B1, h):
 
 
 def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
-                     modip, TOV, coeff_dir, irtam_dir):
+                     modip, TOV, irtam_dir='', use_subdirs=True):
     """Update parameters and build EDP for IRTAM for one time frame.
 
     Parameters
@@ -896,10 +896,13 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
         Modified dip angle in degrees.
     TOV : float
         Time of Validity in decimal hours. Use 24 if not known.
-    coeff_dir : str
-        Direction of IRI coefficients.
     irtam_dir : str
-        Direction of IRTAM coefficients.
+        Directory for IRTAM coefficients, or '' to use package directory.
+        (default='')
+    use_subdirs : bool
+        If True, adds YYYY/MMDD subdirectories to the filename path, if False
+        assumes that the entire path to the coefficient directory is provided
+        by `irtam_dir` (default=True)
 
     Returns
     -------
@@ -942,13 +945,8 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
     it = np.where(aUT == UT)[0]
 
     # Find IRTAM parameters
-    IRTAM_f2 = IRTAM_density(dtime,
-                             alon,
-                             alat,
-                             modip,
-                             TOV,
-                             coeff_dir,
-                             irtam_dir)
+    IRTAM_f2 = IRTAM_density(dtime, alon, alat, modip, TOV, irtam_dir,
+                             use_subdirs)
 
     # Create empty arrays with needed shape for 1 time frame
     # to fill with updated values
@@ -1015,7 +1013,8 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
     return F2_result, F1_result, E_result, Es_result, EDP_result
 
 
-def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
+def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
+                use_subdirs=True):
     """Update parameters and build EDP for IRTAM for one time frame.
 
     Parameters
@@ -1038,7 +1037,12 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
     F107 : float
         User provided F10.7 solar flux index in SFU.
     irtam_dir : str
-        Place where IRTAM coefficients are on user's local computer.
+        Directory with IRTAM coefficients, or '' to use package directory.
+        (default='')
+    use_subdirs : bool
+        If True, adds YYYY/MMDD subdirectories to the filename path, if False
+        assumes that the entire path to the coefficient directory is provided
+        by `irtam_dir` (default=True)
 
     Returns
     -------
@@ -1154,19 +1158,11 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir):
         dtime = dt.datetime(year, month, day, hour, minute, 0)
 
         # Call PyIRTAM:
-        F2, F1, E, Es, EDP = call_IRTAM_PyIRI(aUT,
-                                              dtime,
-                                              alon,
-                                              alat,
-                                              aalt,
-                                              f2_b,
-                                              f1_b,
-                                              e_b,
-                                              es_b,
-                                              mag['modip'],
-                                              aUT[it],
-                                              PyIRI.coeff_dir,
-                                              irtam_dir)
+        F2, F1, E, Es, EDP = call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt,
+                                              f2_b, f1_b, e_b, es_b,
+                                              mag['modip'], aUT[it],
+                                              PyIRI.coeff_dir, irtam_dir,
+                                              use_subdirs=use_subdirs)
         # Save results.
         if it == 0:
             for key in F2:
