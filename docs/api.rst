@@ -4,5 +4,8 @@ Application Programming Interface
 =================================
 
 
-.. automodule:: PyIRTAM.main_library
+.. automodule:: PyIRTAM.lib
+    :members:
+
+.. automodule:: PyIRTAM.coeff
     :members:
