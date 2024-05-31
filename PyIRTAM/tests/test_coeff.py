@@ -5,6 +5,7 @@
 import datetime as dt
 import os
 import pytest
+import shutil
 
 import PyIRTAM
 
@@ -114,21 +115,8 @@ class TestCoeffDownload(object):
             PyIRTAM.irtam_coeff_dir = self.package_irtam_dir
 
         # Remove the test directory/ies and file, if present
-        if os.path.isfile(self.test_file):
-            os.remove(self.test_file)
-
-            # Remove extra files, if present
-            self.msg = os.path.dirname(self.test_file)
-            for self.fstat in os.listdir(self.msg):
-                os.remove(os.path.join(self.msg, self.fstat))
-
-            while self.msg != self.test_dir and len(self.msg) > len(
-                    self.test_dir):
-                os.rmdir(self.msg)
-                self.msg, _ = os.path.split(self.msg)
-
         if os.path.isdir(self.test_dir):
-            os.rmdir(self.test_dir)
+            shutil.rmtree(self.test_dir)
 
         del self.dtime, self.package_irtam_dir, self.test_dir, self.dstat
         del self.fstat, self.msg, self.param, self.test_file
