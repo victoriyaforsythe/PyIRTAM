@@ -156,7 +156,12 @@ class TestCoeffDownload(object):
 
         # Test the downloaded file
         dirlist = os.listdir(self.test_file)
-        self.test_file = os.path.join(self.test_file, dirlist[0])
+        try:
+            self.test_file = os.path.join(self.test_file, dirlist[0])
+        except IndexError:
+            raise RuntimeError('problem setting: ', self.test_file, ":",
+                               dirlist, ":", self.test_dir)
+
         assert len(dirlist) == 1, "unexpected number of files: {:}".format(
             dirlist)
         assert self.test_file.find(self.dtime.strftime(
