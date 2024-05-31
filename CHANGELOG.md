@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/).
 * Added a function to retrieve the IRTAM coefficients
 * Added a module for IRTAM coefficient functions
 * Added unit tests for the IRTAM coefficient functions
+* Updated library functions to specify use of subdirectories and removed unused arg
+* Added a package-level directory to store IRTAM coefficients, if desired
 
 ## 0.0.3 (03-20-2024)
 * Fixed import bug, changing the name of the primary sub-module
