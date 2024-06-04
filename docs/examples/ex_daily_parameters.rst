@@ -2,20 +2,18 @@ Example 1: Daily Ionospheric Parameters
 =======================================
 
 PyIRTAM can calculate daily ionospheric parameters for the user provided
-IRTAM coefficients and grid.
-The estimation of the parameters occurs simultaneously at all grid points
-and for all desired diurnal time frames. 
+IRTAM coefficients and grid. The estimation of the parameters occurs
+simultaneously at all grid points and for all desired diurnal time frames. 
 
 1. Import libraries:
 
 ::
 
-
+   import datetime as dt
    import numpy as np
    import PyIRI
    import PyIRTAM
    import PyIRI.main_library as ml
-   import PyIRTAM.main_library as il
    import PyIRI.plotting as plot
 
 2. Specify a year, a month, and a day:
@@ -26,6 +24,7 @@ and for all desired diurnal time frames.
    year = 2022
    month = 1
    day = 1
+   dtime = dt.datetime(year, month, day)
 
 3. Specify solar flux index F10.7 in SFU:
 
@@ -64,23 +63,38 @@ and for all desired diurnal time frames.
    alt_max = 700
    aalt = np.arange(alt_min, alt_max, alt_res)
    
-7. Specify a directory on your machine where IRTAM coefficients live:
+7. Specify a directory on your machine where IRTAM coefficients live. If you
+   don't want to specify this, PyIRTAM will create a directory within the
+   package as a default. This location can be found through the variable
+   ``PyIRTAM.irtam_coeff_dir``:
 
 ::
 
-   irtam_dir = '/Users/vmakarevich/Documents/Science_VF2/PyIRTAM/IRTAM/'
-   
-8. Run PyIRTAM:
+   irtam_dir = '~/Data/IRTAM_Coeffs/'  # Directory need not exist
+
+8. Download the IRTAM coefficients from the UMass Lowell data base. By default,
+   these will be stored in subdirectories that separate data by year and
+   month-day:
 
 ::
 
-   f2_iri, f1_iri, e_iri, es_iri, sun, mag, edp_iri, f2_irtam, f1_irtam, e_irtam, es_irtam, edp_irtam = il.run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir)
+   for param in ['B0', 'B1', 'hmF2', 'foF2']:
+       PyIRTAM.coeff.download_irtam_coeffs(dtime, param, irtam_dir=irtam_dir)
 
-9. Plot results and saved at given location:
+9. Run PyIRTAM:
 
 ::
 
-   save_plot_dir = '/Users/vmakarevich/Documents/Science_VF2/PyIRTAM/Fig/'
+   (f2_iri, f1_iri, e_iri, es_iri, sun, mag, edp_iri, f2_irtam, f1_irtam,
+    e_irtam, es_irtam, edp_irtam) = PyIRTAM.run_PyIRTAM(year, month, day, aUT,
+                                                        alon, alat, aalt, F107,
+                                                        irtam_dir=irtam_dir)
+
+10. Plot results and saved at given location, suggestion provided:
+
+::
+
+   save_plot_dir = '~/Plots/IRTAM/'  # Directory must exist
    
    UT_show = 10
    plot.PyIRI_plot_NmF2(f2, ahr, alon, alat, alon_2d, alat_2d, sun,
@@ -117,20 +131,20 @@ and for all desired diurnal time frames.
     :align: center
     :alt: Global distribution of hmF2 from PyIRTAM.
 
-10. Plot density time series for PyIRI and PyIRTAM at specified location:
+11. Plot density time series for PyIRI and PyIRTAM at specified location:
 
 ::
 
    lon_plot = 0
    lat_plot = 0
    
-   plot.PyIRI_plot_1location_diurnal_density(edp_iri, alon, alat, lon_plot, lat_plot,
-                                             aalt, aUT, save_plot_dir,
+   plot.PyIRI_plot_1location_diurnal_density(edp_iri, alon, alat, lon_plot,
+                                             lat_plot, aalt, aUT, save_plot_dir,
                                              plot_name='PyIRI_EDP_diurnal.pdf')
 
-   plot.PyIRI_plot_1location_diurnal_density(edp_irtam, alon, alat, lon_plot, lat_plot,
-                                             aalt, aUT, save_plot_dir,
-                                             plot_name='PyIRTAM_EDP_diurnal.pdf')
+   plot.PyIRI_plot_1location_diurnal_density(
+       edp_irtam, alon, alat, lon_plot, lat_plot, aalt, aUT, save_plot_dir,
+       plot_name='PyIRTAM_EDP_diurnal.pdf')
 
 .. image:: Figs/PyIRI_diurnal.pdf
     :width: 600px

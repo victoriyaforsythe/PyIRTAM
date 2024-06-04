@@ -33,11 +33,9 @@ keywords = [
   "modelling"
 ]
 dependencies = [
-  "fortranformat",
-  "matplotlib",
   "numpy",
   "pyiri",
-  "scipy"
+  "requests",
 ]
 
 [project.optional-dependencies]

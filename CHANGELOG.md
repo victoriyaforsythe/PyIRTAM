@@ -2,6 +2,13 @@
 All notable changes to this project are documented in this file. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.0.4 (06-XX-2024)
+* Added a function to retrieve the IRTAM coefficients
+* Added a module for IRTAM coefficient functions
+* Added unit tests for the IRTAM coefficient functions
+* Updated library functions to specify use of subdirectories and removed unused arg
+* Added a package-level directory to store IRTAM coefficients, if desired
+
 ## 0.0.3 (03-20-2024)
 * Fixed import bug, changing the name of the primary sub-module
 * Added an error catch for bad IRTAM directory input and unit tests for this
