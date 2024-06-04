@@ -67,8 +67,7 @@ def IRTAM_density(dtime, alon, alat, modip, TOV, coeff_dir, irtam_dir):
     References
     ----------
     Galkin et al. (2015), GAMBIT Database and Explorer for Real-Time
-    IRI Maps of F2 Layer Peak Height and Density, IES. url:
-    https://ies2015.bc.edu/wp-content/uploads/2015/05/061-Galkin-Paper.pdf
+    IRI Maps of F2 Layer Peak Height and Density, IES.
 
     Forsythe et al. (2023), PyIRI: Whole-Globe Approach to the
     International Reference Ionosphere Modeling Implemented in Python,
@@ -139,8 +138,7 @@ def IRTAM_set_gl_G(alon, alat, modip):
     Space Weather.
 
     Galkin et al. (2015), GAMBIT Database and Explorer for Real-Time
-    IRI Maps of F2 Layer Peak Height and Density, IES. url:
-    https://ies2015.bc.edu/wp-content/uploads/2015/05/061-Galkin-Paper.pdf
+    IRI Maps of F2 Layer Peak Height and Density, IES.
 
     Jones, W. B., & Gallet, R. M. (1965). Representation of diurnal
     and geographic variations of ionospheric data by numerical methods,
@@ -177,8 +175,7 @@ def IRTAM_diurnal_functions(time_array, TOV):
     References
     ----------
     Galkin et al. (2015), GAMBIT Database and Explorer for Real-Time
-    IRI Maps of F2 Layer Peak Height and Density, IES. url:
-    https://ies2015.bc.edu/wp-content/uploads/2015/05/061-Galkin-Paper.pdf
+    IRI Maps of F2 Layer Peak Height and Density, IES.
 
     Forsythe et al. (2023), PyIRI: Whole-Globe Approach to the
     International Reference Ionosphere Modeling Implemented in Python,
@@ -241,8 +238,7 @@ def IRTAM_read_coeff(dtime, coeff_dir):
     References
     ----------
     Galkin et al. (2015), GAMBIT Database and Explorer for Real-Time
-    IRI Maps of F2 Layer Peak Height and Density, IES. url:
-    https://ies2015.bc.edu/wp-content/uploads/2015/05/061-Galkin-Paper.pdf
+    IRI Maps of F2 Layer Peak Height and Density, IES.
 
     Forsythe et al. (2023), PyIRI: Whole-Globe Approach to the
     International Reference Ionosphere Modeling Implemented in Python,
