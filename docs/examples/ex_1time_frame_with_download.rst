@@ -18,7 +18,6 @@ simultaneously at all grid points.
 
 ::
 
-
    year = 2020
    month = 1
    day = 1
@@ -31,7 +30,6 @@ simultaneously at all grid points.
 3. Specify solar flux index F10.7 in SFU:
 
 ::
-
 
    f107 = 90.8
 
