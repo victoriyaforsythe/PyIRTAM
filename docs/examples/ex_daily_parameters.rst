@@ -90,7 +90,7 @@ simultaneously at all grid points and for all desired diurnal time frames.
                                                         alon, alat, aalt, F107,
                                                         irtam_dir=irtam_dir)
 
-10. Plot results and saved at given location, suggestion provided:
+10. Plot results and save at given location, suggestion provided:
 
 ::
 
