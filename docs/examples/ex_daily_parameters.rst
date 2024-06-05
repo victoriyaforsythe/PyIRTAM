@@ -19,7 +19,6 @@ simultaneously at all grid points and for all desired diurnal time frames.
 
 ::
 
-
    irtam_dir = '/Users/vmakarevich/Documents/Science_VF2/PyIRTAM/IRTAM/'
 
 3. Specify a directory on your machine where to save plots. Example:
@@ -27,13 +26,11 @@ simultaneously at all grid points and for all desired diurnal time frames.
 
 ::
 
-
    save_plot_dir = '/Users/vmakarevich/Documents/'
 
 4. Specify a year, a month, and a day:
 
 ::
-
 
    year = 2022
    month = 1
@@ -42,7 +39,6 @@ simultaneously at all grid points and for all desired diurnal time frames.
 5. Specify solar flux index F10.7 in SFU:
 
 ::
-
 
    f107 = 90.8
 
@@ -88,7 +84,6 @@ simultaneously at all grid points and for all desired diurnal time frames.
 10. Plot results and save at given location, suggestion provided:
 
 ::
-
 
    UT_show = 10
    print('Plot of PyIRI NmF2:')
