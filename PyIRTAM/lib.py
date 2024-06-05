@@ -1153,6 +1153,12 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
         minute = int((aUT[it] - hour) * 60.)
         dtime = dt.datetime(year, month, day, hour, minute, 0)
 
+        # If the user passes '' for irtam_dir, the coefficients are
+        # downloaded form the UMass Lowell data base
+        if irtam_dir == '':
+            for param in ['B0', 'B1', 'hmF2', 'foF2']:
+                coeff.download_irtam_coeffs(dtime, param, irtam_dir=irtam_dir)
+
         # Call PyIRTAM:
         F2, F1, E, Es, EDP = call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt,
                                               f2_b, f1_b, e_b, es_b,
