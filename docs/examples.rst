@@ -6,3 +6,4 @@ also available in the `GitHub Repository <https://github.com/victoriyaforsythe/P
 
 .. toctree::
    examples/ex_daily_parameters.rst
+   examples/ex_1time_frame_with_download.rst
