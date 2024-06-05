@@ -1156,8 +1156,7 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
         # Call PyIRTAM:
         F2, F1, E, Es, EDP = call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt,
                                               f2_b, f1_b, e_b, es_b,
-                                              mag['modip'], aUT[it],
-                                              PyIRI.coeff_dir, irtam_dir,
+                                              mag['modip'], aUT[it], irtam_dir,
                                               use_subdirs=use_subdirs)
         # Save results.
         if it == 0:
