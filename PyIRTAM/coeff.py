@@ -48,7 +48,7 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
     """
     PyIRTAM.logger.info('Downloading coefficients from GAMBIT for: {:}'.format(
         param))
-    
+
     # Initalize output
     dstat = False
     fstat = False
@@ -61,7 +61,7 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
     # Determine the appropriate output filename
     param_file = get_irtam_param_filename(dtime, param, irtam_dir, use_subdirs)
     PyIRTAM.logger.info('Saved as: {:}'.format(param_file))
-    
+
     # Ensure the desired output directory exists
     dir_name = os.path.dirname(param_file)
 
