@@ -63,12 +63,12 @@ simultaneously at all grid points.
    alt_max = 700
    aalt = np.arange(alt_min, alt_max, alt_res)
    
-7. Run PyIRTAM for the selected time frame. If irtam_dir='' in the inputs,
-   the coefficients will be downloaded.
+7. Run PyIRTAM for the selected time frame. Use the ``download`` kwarg to
+   specify whether or not the coefficients will be downloaded.
 
 ::
 
    (f2_iri, f1_iri, e_iri, es_iri, sun, mag, edp_iri, f2_irtam, f1_irtam,
    e_irtam, es_irtam, edp_irtam) = PyIRTAM.run_PyIRTAM(year, month, day, ahr,
                                                     alon, alat, aalt, f107,
-                                                    irtam_dir='')
+                                                    download=True)
