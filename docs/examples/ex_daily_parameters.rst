@@ -19,14 +19,14 @@ simultaneously at all grid points and for all desired diurnal time frames.
 
 ::
 
-   irtam_dir = '/Users/vmakarevich/Documents/Science_VF2/PyIRTAM/IRTAM/'
+   irtam_dir = '~/Documents/Science_VF2/PyIRTAM/IRTAM/'
 
 3. Specify a directory on your machine where to save plots. Example:
 
 
 ::
 
-   save_plot_dir = '/Users/vmakarevich/Documents/'
+   save_plot_dir = '~/Documents/'
 
 4. Specify a year, a month, and a day:
 
