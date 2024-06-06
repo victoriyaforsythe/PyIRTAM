@@ -79,7 +79,9 @@ simultaneously at all grid points and for all desired diurnal time frames.
    (f2_iri, f1_iri, e_iri, es_iri, sun, mag, edp_iri, f2_irtam, f1_irtam,
     e_irtam, es_irtam, edp_irtam) = PyIRTAM.run_PyIRTAM(year, month, day, ahr,
                                                         alon, alat, aalt, f107,
-                                                        irtam_dir=irtam_dir)
+                                                        irtam_dir=irtam_dir,
+                                                        use_subdirs=True,
+                                                        download=False)
 
 10. Plot results and save at given location, suggestion provided:
 

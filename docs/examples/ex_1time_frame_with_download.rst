@@ -71,4 +71,5 @@ simultaneously at all grid points.
    (f2_iri, f1_iri, e_iri, es_iri, sun, mag, edp_iri, f2_irtam, f1_irtam,
    e_irtam, es_irtam, edp_irtam) = PyIRTAM.run_PyIRTAM(year, month, day, ahr,
                                                     alon, alat, aalt, f107,
-                                                    download=True)
+                                                    use_subdirs=True,
+                                                    download=False)
