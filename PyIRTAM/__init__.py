@@ -2,6 +2,11 @@
 
 from importlib import metadata
 from importlib import resources
+import logging
+
+# Initialize the logger
+logging.raiseExceptions = False
+logger = logging.getLogger('PyIRTAM_logger')
 
 # Import the package modules and top-level classes
 from PyIRTAM import coeff  # noqa F401
