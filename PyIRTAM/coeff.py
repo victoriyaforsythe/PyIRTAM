@@ -46,6 +46,9 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
     paramaters failed
 
     """
+    PyIRTAM.logger.info('Downloading coefficients from GAMBIT for: {:}'.format(
+        param))
+
     # Initalize output
     dstat = False
     fstat = False
@@ -57,18 +60,22 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
 
     # Determine the appropriate output filename
     param_file = get_irtam_param_filename(dtime, param, irtam_dir, use_subdirs)
+    PyIRTAM.logger.info('Saved as: {:}'.format(param_file))
 
     # Ensure the desired output directory exists
     dir_name = os.path.dirname(param_file)
 
     if not os.path.isdir(dir_name):
         os.makedirs(dir_name)
+        PyIRTAM.logger.info('Created coefficient directory: {:}'.format(
+            dir_name))
 
     # Test to see if the file exists already, if overwriting is not desired
     if os.path.isfile(param_file):
         fstat = True
         msg = 'IRTAM parameter coefficient file exists: {:}'.format(param_file)
         if not overwrite:
+            PyIRTAM.logger.warning(msg)
             return dstat, fstat, msg
         else:
             msg = "".join(["Overwriting ", msg])
@@ -87,7 +94,7 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
         msg = ''.join([msg, '' if len(msg) == 0 else '\n',
                        'Bad IRTAM coefficient query: ', url,
                        '\nRemote message: ', req.text])
-
+        PyIRTAM.logger.warning(msg)
         return dstat, fstat, msg
 
     # Write the new coefficients to the desired output file
@@ -95,6 +102,9 @@ def download_irtam_coeffs(dtime, param, irtam_dir='', use_subdirs=True,
     fstat = True
     with open(param_file, 'w') as fout:
         fout.write(req.text)
+
+    if len(msg) > 0:
+        PyIRTAM.logger.info(msg)
 
     return dstat, fstat, msg
 

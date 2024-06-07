@@ -1010,7 +1010,7 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
 
 
 def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
-                use_subdirs=True):
+                use_subdirs=True, download=False):
     """Update parameters and build EDP for IRTAM for one time frame.
 
     Parameters
@@ -1039,6 +1039,8 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
         If True, adds YYYY/MMDD subdirectories to the filename path, if False
         assumes that the entire path to the coefficient directory is provided
         by `irtam_dir` (default=True)
+    download : bool
+        If True, downloads coefficient files (default=False)
 
     Returns
     -------
@@ -1153,11 +1155,16 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
         minute = int((aUT[it] - hour) * 60.)
         dtime = dt.datetime(year, month, day, hour, minute, 0)
 
+        # If the user specifies, the coefficients are
+        # downloaded form the UMass Lowell data base
+        if download:
+            for param in ['B0', 'B1', 'hmF2', 'foF2']:
+                coeff.download_irtam_coeffs(dtime, param, irtam_dir=irtam_dir)
+
         # Call PyIRTAM:
         F2, F1, E, Es, EDP = call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt,
                                               f2_b, f1_b, e_b, es_b,
-                                              mag['modip'], aUT[it],
-                                              PyIRI.coeff_dir, irtam_dir,
+                                              mag['modip'], aUT[it], irtam_dir,
                                               use_subdirs=use_subdirs)
         # Save results.
         if it == 0:
