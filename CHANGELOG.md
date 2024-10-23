@@ -2,6 +2,9 @@
 All notable changes to this project are documented in this file. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.0.5 (10-XX-2024)
+* Updated README to include instructions and fix DOI, Coverage badges
+
 ## 0.0.4 (06-07-2024)
 * Added a function to retrieve the IRTAM coefficients
 * Added a module for IRTAM coefficient functions
