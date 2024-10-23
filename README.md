@@ -14,7 +14,7 @@ entire day simultaneously.
 
 ## Documentation
 
-PyIRTAM documentation can be found [here](https://pyirtam.readthedocs.io/en/main/)
+PyIRTAM documentation can be found [here](https://pyirtam.readthedocs.io/en/latest/index.html)
 
 ## Getting Started
 
