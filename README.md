@@ -10,4 +10,22 @@
 
 Python tool for processing IRTAM coefficients that evaluates ionospheric
 parameters and electron density on the entire given global grid and for the
-entire day simultaneously. 
+entire day simultaneously.
+
+## Documentation
+
+PyIRTAM documentation can be found [here](https://pyirtam.readthedocs.io/en/main/)
+
+## Getting Started
+
+`pip install pyirtam`
+
+Or read the [installation guide](https://pyirtam.readthedocs.io/en/latest/installation.html)
+
+## Examples of how to use PyIRTAM
+
+Tutorials are available [examples](https://pyirtam.readthedocs.io/en/latest/examples.html)
+
+## Jupyter tutorial
+
+Tutorials with Jupyter are available [tutorials](https://github.com/victoriyaforsythe/PyIRTAM/tree/main/docs/tutorials)
