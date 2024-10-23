@@ -14,8 +14,31 @@ officially supports Python 3.9+.
 3. requests
 
 
-Installation Options
---------------------
+Installation Option 1
+---------------------
+1. Make sure that your version of pip is same as python.
+E.g., if you are using Python3, you also should use pip3.
+To check that, type in your terminal::
+
+        which python3
+
+
+and::
+
+        which pip3
+
+The output directories must be the same.
+
+2. Once you made sure that your pip connects to the correct python,
+use the following command in your terminal::
+
+        pip install PyIRTAM
+
+This installation will take care of all the dependencies.
+For example, PyIRTAM uses PyIRI module and Numpy module.
+
+Installation Option 2
+---------------------
 
 1. Clone the git repository
 ::

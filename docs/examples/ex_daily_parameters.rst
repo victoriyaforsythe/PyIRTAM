@@ -95,13 +95,12 @@ simultaneously at all grid points and for all desired diurnal time frames.
    plot.PyIRI_plot_NmF2(f2_irtam, ahr, alon, alat, alon_2d, alat_2d, sun,
                         UT_show, save_plot_dir, plot_name='PyIRTAM_NmF2.pdf')
 
-
-.. image:: Figs/PyIRI_NmF2.pdf
+.. image:: /docs/figures/Fig/PyIRI_NmF2.pdf
     :width: 600px
     :align: center
     :alt: Global distribution of NmF2 from PyIRI.
 
-.. image:: Figs/PyIRTAM_NmF2.pdf
+.. image:: /docs/figures/Fig/PyIRTAM_NmF2.pdf
     :width: 600px
     :align: center
     :alt: Global distribution of NmF2 from PyIRTAM.
@@ -113,12 +112,12 @@ simultaneously at all grid points and for all desired diurnal time frames.
    plot.PyIRI_plot_hmF2(f2_irtam, ahr, alon, alat, alon_2d, alat_2d, sun,
                         UT_show, save_plot_dir, plot_name='PyIRTAM_hmF2.pdf')
 
-.. image:: Figs/PyIRI_hmF2.pdf
+.. image:: /docs/figures/Fig/PyIRI_hmF2.pdf
     :width: 600px
     :align: center
     :alt: Global distribution of hmF2 from PyIRI.
 
-.. image:: Figs/PyIRTAM_hmF2.pdf
+.. image:: /docs/figures/Fig/PyIRTAM_hmF2.pdf
     :width: 600px
     :align: center
     :alt: Global distribution of hmF2 from PyIRTAM.
@@ -138,12 +137,12 @@ simultaneously at all grid points and for all desired diurnal time frames.
                                              lat_plot, aalt, ahr, save_plot_dir,
                                              plot_name='PyIRTAM_EDP_diurnal.pdf')
 
-.. image:: Figs/PyIRI_diurnal.pdf
+.. image:: /docs/figures/Fig/PyIRI_EDP_diurnal.pdf
     :width: 600px
     :align: center
     :alt: Diurnal distribution of density from PyIRI.
 
-.. image:: Figs/PyIRTAM_diurnal.pdf
+.. image:: /docs/figures/Fig/PyIRTAM_EDP_diurnal.pdf
     :width: 600px
     :align: center
     :alt: Diurnal distribution of density from PyIRTAM.
