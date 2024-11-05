@@ -4,6 +4,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ## 0.0.5 (10-24-2024)
 * Updated README to include instructions and fix DOI, Coverage badges
+* Fixed documentation links and updated the installation guide
 
 ## 0.0.4 (06-07-2024)
 * Added a function to retrieve the IRTAM coefficients
