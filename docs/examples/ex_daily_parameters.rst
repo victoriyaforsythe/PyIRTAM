@@ -1,5 +1,5 @@
-Example 1: Daily Ionospheric Parameters
-=======================================
+Example 1: In case you have the PyIRTAM coefficients
+====================================================
 
 PyIRTAM can calculate daily ionospheric parameters for the user provided
 IRTAM coefficients and grid. The estimation of the parameters occurs
@@ -10,6 +10,9 @@ simultaneously at all grid points and for all desired diurnal time frames.
 ::
 
    import numpy as np
+   import os
+   import matplotlib.pyplot as plt
+   
    import PyIRI.main_library as ml
    import PyIRI.plotting as plot
    import PyIRTAM
@@ -19,14 +22,14 @@ simultaneously at all grid points and for all desired diurnal time frames.
 
 ::
 
-   irtam_dir = '~/Documents/Science_VF2/PyIRTAM/IRTAM/'
+   irtam_dir = '/Users/vmakarevich/Library/Python/3.9/lib/python/site-packages/PyIRTAM/irtam_coeffs/'
 
 3. Specify a directory on your machine where to save plots. Example:
 
 
 ::
 
-   save_plot_dir = '~/Documents/'
+   save_plot_dir = '/Users/vmakarevich/Documents/GitHub/PyIRTAM/docs/examples/Figs/'
 
 4. Specify a year, a month, and a day:
 
