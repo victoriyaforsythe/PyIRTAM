@@ -657,7 +657,7 @@ def IRTAM_reconstruct_density_from_parameters(F2, F1, E, alt):
 
 
 def IRTAM_EDP_builder(x, aalt):
-    """Construct vertical EDP.
+    """Construct vertical EDP. This is an old function and will be depreciated.
 
     Parameters
     ----------
@@ -1303,7 +1303,6 @@ def IRTAM_EDP_builder_updated(x, aalt):
     nalt = aalt.size
 
     # Empty arrays
-    density_out = np.zeros((nalt, ngrid))
     density_F2 = np.zeros((nalt, ngrid))
     full_F1 = np.zeros((nalt, ngrid))
     density_F1 = np.zeros((nalt, ngrid))
@@ -1369,7 +1368,7 @@ def IRTAM_EDP_builder_updated(x, aalt):
     # F2 bottom down to E
     a = np.where((a_alt < a_hmF2) & (a_alt >= a_hmE))
     density_F2[a] = (Ramakrishnan_Rawer_function(a_NmF2[a], a_hmF2[a],
-                                                a_B0[a], a_B1[a], a_alt[a])
+                                                 a_B0[a], a_B1[a], a_alt[a])
                      * multiplier_down_F2[a])
 
     # ------E region-------
