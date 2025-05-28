@@ -686,7 +686,7 @@ def IRTAM_EDP_builder(x, aalt):
     Space Weather.
 
     """
-    message1 = "This function has been replaced by IRTAM_EDP_builder_updated"
+    message1 = "This function is replaced by IRTAM_EDP_builder_continuous"
     message2 = " and will be removed in version 0.0.7+"
     warnings.warn(message1 + message2,
                   DeprecationWarning, stacklevel=2)
