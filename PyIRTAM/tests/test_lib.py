@@ -46,7 +46,7 @@ class TestIRTAMErrors(object):
         return
 
 
-def test_IRTAM_EDP_builder_updated_shape_and_validity():
+def test_IRTAM_EDP_builder_continuous_shape_and_validity():
     """Test IRTAM_EDP_builder_updated output shape and regression."""
     aalt = np.arange(100, 500, 20)
     x = np.array([[1.95159501e+12],
@@ -62,7 +62,7 @@ def test_IRTAM_EDP_builder_updated_shape_and_validity():
                   [8.99941343e-01],
                   [7.00000000e+00]])
 
-    res = lib.IRTAM_EDP_builder_updated(x, aalt)
+    res = lib.IRTAM_EDP_builder_continuous(x, aalt)
 
     expected = np.array([
         [8.66186261e+06],
