@@ -23,8 +23,8 @@ import numpy as np
 import os
 
 import PyIRI
-import PyIRI.main_library as ml
 import PyIRI.edp_update as ml_up
+import PyIRI.main_library as ml
 
 from PyIRTAM import coeff
 
