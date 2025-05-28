@@ -686,6 +686,9 @@ def IRTAM_EDP_builder(x, aalt):
     Space Weather.
 
     """
+    message = 'This function has been replaced by IRTAM_EDP_builder_updated and will be removed in version 0.0.7+'
+    warnings.warn(message,
+                  DeprecationWarning, stacklevel=2)
 
     # Number of elements in horizontal dimension of grid
     ngrid = x.shape[1]
