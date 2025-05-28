@@ -87,62 +87,214 @@ simultaneously at all grid points and for all desired diurnal time frames.
 
 ::
 
-   UT_show = 10
-   print('Plot of PyIRI NmF2:')
-   plot.PyIRI_plot_NmF2(f2_iri, ahr, alon, alat, alon_2d, alat_2d, sun,
-                        UT_show, save_plot_dir, plot_name='PyIRI_NmF2.pdf')
-   print('Plot of PyIRTAM NmF2:')
-   plot.PyIRI_plot_NmF2(f2_irtam, ahr, alon, alat, alon_2d, alat_2d, sun,
-                        UT_show, save_plot_dir, plot_name='PyIRTAM_NmF2.pdf')
+   # Make plots for a certain UT:
+   UT_show = 2
+   ind_time = np.where(ahr == UT_show)
+   ind_grid = np.where(np.isfinite(alon))
 
-.. image:: /docs/figures/Fig/PyIRI_NmF2.pdf
+   # ----------------------------------------------------------------------------
+   plot_name='PyIRI_NmF2.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6, 3),
+                           constrained_layout=True)
+   ax.set_title('PyIRI NmF2')
+   plt.xlim([-180, 180])
+   plt.ylim([-90, 90])
+   plt.xticks(np.arange(-180, 180 + 45, 90))
+   plt.yticks(np.arange(-90, 90 + 45, 45))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('Geo Lon (°)')
+   ax.set_ylabel('Geo Lat (°)')
+   z = np.reshape(f2_iri['Nm'][ind_time, ind_grid], alon_2d.shape)
+   mesh = ax.pcolormesh(alon_2d, alat_2d, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   ax.scatter(sun['lon'][ind_time], sun['lat'][ind_time],
+               c='red', s=20, edgecolors="black", linewidths=0.5)
+   cbar.set_label('$Nm$F2 (m$^{-3}$)')
+   plt.savefig(figname, format='png', bbox_inches='tight')
+
+   # ----------------------------------------------------------------------------
+   plot_name='PyIRI_hmF2.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6, 3),
+                           constrained_layout=True)
+   ax.set_title('PyIRI hmF2')
+   plt.xlim([-180, 180])
+   plt.ylim([-90, 90])
+   plt.xticks(np.arange(-180, 180 + 45, 90))
+   plt.yticks(np.arange(-90, 90 + 45, 45))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('Geo Lon (°)')
+   ax.set_ylabel('Geo Lat (°)')
+   z = np.reshape(f2_iri['hm'][ind_time, ind_grid], alon_2d.shape)
+   mesh = ax.pcolormesh(alon_2d, alat_2d, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   ax.scatter(sun['lon'][ind_time], sun['lat'][ind_time],
+               c='red', s=20, edgecolors="black", linewidths=0.5)
+   cbar.set_label('$hm$F2 (km)')
+   plt.savefig(figname, format='png', bbox_inches='tight')
+
+   # ----------------------------------------------------------------------------
+   plot_name='PyIRTAM_NmF2.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6, 3),
+                           constrained_layout=True)
+   ax.set_title('PyIRTAM NmF2')
+   plt.xlim([-180, 180])
+   plt.ylim([-90, 90])
+   plt.xticks(np.arange(-180, 180 + 45, 90))
+   plt.yticks(np.arange(-90, 90 + 45, 45))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('Geo Lon (°)')
+   ax.set_ylabel('Geo Lat (°)')
+   z = np.reshape(f2_irtam['Nm'][ind_time, ind_grid], alon_2d.shape)
+   mesh = ax.pcolormesh(alon_2d, alat_2d, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   ax.scatter(sun['lon'][ind_time], sun['lat'][ind_time],
+               c='red', s=20, edgecolors="black", linewidths=0.5)
+   cbar.set_label('$Nm$F2 (m$^{-3}$)')
+   plt.savefig(figname, format='png', bbox_inches='tight')
+
+   # ----------------------------------------------------------------------------
+   plot_name='PyIRTAM_hmF2.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6, 3),
+                           constrained_layout=True)
+   ax.set_title('PyIRTAM hmF2')
+   plt.xlim([-180, 180])
+   plt.ylim([-90, 90])
+   plt.xticks(np.arange(-180, 180 + 45, 90))
+   plt.yticks(np.arange(-90, 90 + 45, 45))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('Geo Lon (°)')
+   ax.set_ylabel('Geo Lat (°)')
+   z = np.reshape(f2_irtam['hm'][ind_time, ind_grid], alon_2d.shape)
+   mesh = ax.pcolormesh(alon_2d, alat_2d, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   ax.scatter(sun['lon'][ind_time], sun['lat'][ind_time],
+               c='red', s=20, edgecolors="black", linewidths=0.5)
+   cbar.set_label('$hm$F2 (km)')
+   plt.savefig(figname, format='png', bbox_inches='tight')
+
+   # ----------------------------------------------------------------------------
+   plot_name='PyIRTAM_B0.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6, 3),
+                           constrained_layout=True)
+   ax.set_title('PyIRTAM B0')
+   plt.xlim([-180, 180])
+   plt.ylim([-90, 90])
+   plt.xticks(np.arange(-180, 180 + 45, 90))
+   plt.yticks(np.arange(-90, 90 + 45, 45))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('Geo Lon (°)')
+   ax.set_ylabel('Geo Lat (°)')
+   z = np.reshape(f2_irtam['B0'][ind_time, ind_grid], alon_2d.shape)
+   mesh = ax.pcolormesh(alon_2d, alat_2d, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   ax.scatter(sun['lon'][ind_time], sun['lat'][ind_time],
+               c='red', s=20, edgecolors="black", linewidths=0.5)
+   cbar.set_label('B0 (km)')
+   plt.savefig(figname, format='png', bbox_inches='tight')
+
+   # ----------------------------------------------------------------------------
+   plot_name='PyIRTAM_B1.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, sharex=True, sharey=True, figsize=(6, 3),
+                           constrained_layout=True)
+   ax.set_title('PyIRTAM B1')
+   plt.xlim([-180, 180])
+   plt.ylim([-90, 90])
+   plt.xticks(np.arange(-180, 180 + 45, 90))
+   plt.yticks(np.arange(-90, 90 + 45, 45))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('Geo Lon (°)')
+   ax.set_ylabel('Geo Lat (°)')
+   z = np.reshape(f2_irtam['B1'][ind_time, ind_grid], alon_2d.shape)
+   mesh = ax.pcolormesh(alon_2d, alat_2d, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   ax.scatter(sun['lon'][ind_time], sun['lat'][ind_time],
+               c='red', s=20, edgecolors="black", linewidths=0.5)
+   cbar.set_label('B1')
+   plt.savefig(figname, format='png', bbox_inches='tight')
+
+
+.. image:: /docs/figures/Fig/PyIRI_NmF2.png
     :width: 600px
     :align: center
     :alt: Global distribution of NmF2 from PyIRI.
 
-.. image:: /docs/figures/Fig/PyIRTAM_NmF2.pdf
+.. image:: /docs/figures/Fig/PyIRTAM_NmF2.png
     :width: 600px
     :align: center
     :alt: Global distribution of NmF2 from PyIRTAM.
 
-   print('Plot of PyIRI hmF2:')
-   plot.PyIRI_plot_hmF2(f2_iri, ahr, alon, alat, alon_2d, alat_2d, sun,
-                        UT_show, save_plot_dir, plot_name='PyIRI_hmF2.pdf')
-   print('Plot of PyIRTAM hmF2:')
-   plot.PyIRI_plot_hmF2(f2_irtam, ahr, alon, alat, alon_2d, alat_2d, sun,
-                        UT_show, save_plot_dir, plot_name='PyIRTAM_hmF2.pdf')
-
-.. image:: /docs/figures/Fig/PyIRI_hmF2.pdf
+.. image:: /docs/figures/Fig/PyIRI_hmF2.png
     :width: 600px
     :align: center
     :alt: Global distribution of hmF2 from PyIRI.
 
-.. image:: /docs/figures/Fig/PyIRTAM_hmF2.pdf
+.. image:: /docs/figures/Fig/PyIRTAM_hmF2.png
+    :width: 600px
+    :align: center
+    :alt: Global distribution of B0 from PyIRTAM.
+
+.. image:: /docs/figures/Fig/PyIRTAM_B0.png
     :width: 600px
     :align: center
     :alt: Global distribution of hmF2 from PyIRTAM.
 
-11. Plot density time series for PyIRI and PyIRTAM at specified location:
+.. image:: /docs/figures/Fig/PyIRTAM_B1.png
+    :width: 600px
+    :align: center
+    :alt: Global distribution of B1 from PyIRTAM.
+
+1.  Plot density time series for PyIRI and PyIRTAM at specified location:
 
 ::
 
    lon_plot = 0
    lat_plot = 0
-   
-   plot.PyIRI_plot_1location_diurnal_density(edp_iri, alon, alat, lon_plot,
-                                             lat_plot, aalt, ahr, save_plot_dir,
-                                             plot_name='PyIRI_EDP_diurnal.pdf')
 
-   plot.PyIRI_plot_1location_diurnal_density(edp_irtam, alon, alat, lon_plot,
-                                             lat_plot, aalt, ahr, save_plot_dir,
-                                             plot_name='PyIRTAM_EDP_diurnal.pdf')
+   plot_name='PyIRI_EDP_diurnal.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, figsize=(6, 3), constrained_layout=True)
+   ax.set_title('PyIRI')
+   plt.xlim([0, 24])
+   plt.xticks(np.arange(0, 24 + 4, 4))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('UT (hours)')
+   ax.set_ylabel('Altitude (km)')
+   ind_grid = np.where((alon == lon_plot) & (alat == lat_plot))[0]
+   z = np.transpose(np.reshape(edp_iri[:, :, ind_grid], (ahr.size, aalt.size)))
+   mesh = ax.pcolormesh(ahr, aalt, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   cbar.set_label('Electron Density (m$^{-3}$)')
+   plt.savefig(figname, format='png', bbox_inches='tight')
 
-.. image:: /docs/figures/Fig/PyIRI_EDP_diurnal.pdf
+
+   plot_name='PyIRTAM_EDP_diurnal.png'
+   figname = os.path.join(save_plot_dir, plot_name)
+   fig, ax = plt.subplots(1, 1, figsize=(6, 3), constrained_layout=True)
+   ax.set_title('PyIRTAM')
+   plt.xlim([0, 24])
+   plt.xticks(np.arange(0, 24 + 4, 4))
+   ax.set_facecolor('grey')
+   ax.set_xlabel('UT (hours)')
+   ax.set_ylabel('Altitude (km)')
+   ind_grid = np.where((alon == lon_plot) & (alat == lat_plot))[0]
+   z = np.transpose(np.reshape(edp_irtam[:, :, ind_grid], (ahr.size, aalt.size)))
+   mesh = ax.pcolormesh(ahr, aalt, z)
+   cbar = fig.colorbar(mesh, ax=ax)
+   cbar.set_label('Electron Density (m$^{-3}$)')
+   plt.savefig(figname, format='png', bbox_inches='tight')
+
+.. image:: /docs/figures/Fig/PyIRI_EDP_diurnal.png
     :width: 600px
     :align: center
     :alt: Diurnal distribution of density from PyIRI.
 
-.. image:: /docs/figures/Fig/PyIRTAM_EDP_diurnal.pdf
+.. image:: /docs/figures/Fig/PyIRTAM_EDP_diurnal.png
     :width: 600px
     :align: center
     :alt: Diurnal distribution of density from PyIRTAM.

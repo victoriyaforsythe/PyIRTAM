@@ -72,4 +72,4 @@ simultaneously at all grid points.
    e_irtam, es_irtam, edp_irtam) = PyIRTAM.run_PyIRTAM(year, month, day, ahr,
                                                     alon, alat, aalt, f107,
                                                     use_subdirs=True,
-                                                    download=False)
+                                                    download=True)
