@@ -219,32 +219,32 @@ simultaneously at all grid points and for all desired diurnal time frames.
    plt.savefig(figname, format='png', bbox_inches='tight')
 
 
-.. image:: /docs/figures/Fig/PyIRI_NmF2.png
+.. image:: Fig/PyIRI_NmF2.png
     :width: 600px
     :align: center
     :alt: Global distribution of NmF2 from PyIRI.
 
-.. image:: /docs/figures/Fig/PyIRTAM_NmF2.png
+.. image:: Fig/PyIRTAM_NmF2.png
     :width: 600px
     :align: center
     :alt: Global distribution of NmF2 from PyIRTAM.
 
-.. image:: /docs/figures/Fig/PyIRI_hmF2.png
+.. image:: Fig/PyIRI_hmF2.png
     :width: 600px
     :align: center
     :alt: Global distribution of hmF2 from PyIRI.
 
-.. image:: /docs/figures/Fig/PyIRTAM_hmF2.png
+.. image:: Fig/PyIRTAM_hmF2.png
     :width: 600px
     :align: center
     :alt: Global distribution of B0 from PyIRTAM.
 
-.. image:: /docs/figures/Fig/PyIRTAM_B0.png
+.. image:: Fig/PyIRTAM_B0.png
     :width: 600px
     :align: center
     :alt: Global distribution of hmF2 from PyIRTAM.
 
-.. image:: /docs/figures/Fig/PyIRTAM_B1.png
+.. image:: Fig/PyIRTAM_B1.png
     :width: 600px
     :align: center
     :alt: Global distribution of B1 from PyIRTAM.
@@ -289,12 +289,12 @@ simultaneously at all grid points and for all desired diurnal time frames.
    cbar.set_label('Electron Density (m$^{-3}$)')
    plt.savefig(figname, format='png', bbox_inches='tight')
 
-.. image:: /docs/figures/Fig/PyIRI_EDP_diurnal.png
+.. image:: Fig/PyIRI_EDP_diurnal.png
     :width: 600px
     :align: center
     :alt: Diurnal distribution of density from PyIRI.
 
-.. image:: /docs/figures/Fig/PyIRTAM_EDP_diurnal.png
+.. image:: Fig/PyIRTAM_EDP_diurnal.png
     :width: 600px
     :align: center
     :alt: Diurnal distribution of density from PyIRTAM.
