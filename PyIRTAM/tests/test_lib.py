@@ -47,7 +47,7 @@ class TestIRTAMErrors(object):
 
 
 def test_IRTAM_EDP_builder_updated_shape_and_validity():
-    """Test IRTAM_EDP_builder_updated output shape and regression correctness."""
+    """Test IRTAM_EDP_builder_updated output shape and regression."""
     aalt = np.arange(100, 500, 20)
     x = np.array([[1.95159501e+12],
                   [1.08274005e+12],
