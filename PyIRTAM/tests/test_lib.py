@@ -3,6 +3,7 @@
 """Unit tests for PyIRTAM.lib functions."""
 
 import datetime as dt
+import numpy as np
 import os
 import pytest
 
