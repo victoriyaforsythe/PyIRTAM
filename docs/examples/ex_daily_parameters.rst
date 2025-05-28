@@ -22,14 +22,14 @@ simultaneously at all grid points and for all desired diurnal time frames.
 
 ::
 
-   irtam_dir = '/Users/vmakarevich/Library/Python/3.9/lib/python/site-packages/PyIRTAM/irtam_coeffs/'
+   irtam_dir = '~/irtam_coeffs/'
 
 3. Specify a directory on your machine where to save plots. Example:
 
 
 ::
 
-   save_plot_dir = '/Users/vmakarevich/Documents/GitHub/PyIRTAM/docs/examples/Figs/'
+   save_plot_dir = '~/Figs/'
 
 4. Specify a year, a month, and a day:
 
