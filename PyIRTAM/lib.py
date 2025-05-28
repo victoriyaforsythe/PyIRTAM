@@ -24,6 +24,7 @@ import os
 
 import PyIRI
 import PyIRI.main_library as ml
+import PyIRI.edp_update as ml_up
 
 from PyIRTAM import coeff
 
@@ -650,7 +651,7 @@ def IRTAM_reconstruct_density_from_parameters(F2, F1, E, alt):
     x[10, :] = E['B_bot'][0, :]
     x[11, :] = E['B_top'][0, :]
 
-    EDP = IRTAM_EDP_builder(x, alt)
+    EDP = IRTAM_EDP_builder_updated(x, alt)
 
     return EDP
 
@@ -963,7 +964,6 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
 
     # Fill with PyIRI parameters that will not
     # need to be updated
-    NmF1[:, :] = f1['Nm'][it, :]
     NmE[:, :] = e_peak['Nm'][it, :]
     hmE[:, :] = e_peak['hm'][it, :]
     B_F2_top[:, :] = f2['B_top'][it, :]
@@ -979,9 +979,18 @@ def call_IRTAM_PyIRI(aUT, dtime, alon, alat, aalt, f2, f1, e_peak, es_peak,
     # UPDATING PARAMETERS that depend of NmF2, hmF2, and thickness:
     # Convert critical frequency to the electron density (m-3)
     NmF2 = IRTAM_freq_to_Nm(IRTAM_f2['fo'])
-    hmF1 = IRTAM_find_hmF1(IRTAM_f2['B0'], IRTAM_f2['B1'], NmF2,
-                           IRTAM_f2['hm'], NmF1)
-    B_F1_bot = ml.find_B_F1_bot(hmF1, hmE, P_F1)
+
+    # --------------------------------------------------------------------------
+    # Find F1 layer based on the P and F2 layer
+    (NmF1,
+     foF1,
+     hmF1,
+     B_F1_bot) = derive_dependent_F1_parameters(P_F1,
+                                                NmF2,
+                                                IRTAM_f2['hm'],
+                                                IRTAM_f2['B0'],
+                                                IRTAM_f2['B1'],
+                                                hmE)
 
     # combine parameters from PyIRI and IRTAM to merged dictionary
     F2_result = {'Nm': NmF2,
@@ -1136,7 +1145,7 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
     ccir_or_ursi = 0  # 0 = CCIR, 1 = URSI
 
     # Run PyIRI
-    f2_b, f1_b, e_b, es_b, sun, mag, edp_b = ml.IRI_density_1day(
+    f2_b, f1_b, e_b, es_b, sun, mag, edp_b = ml_up.IRI_density_1day(
         year, month, day, aUT, alon, alat, aalt, F107, PyIRI.coeff_dir,
         ccir_or_ursi)
 
@@ -1189,3 +1198,209 @@ def run_PyIRTAM(year, month, day, aUT, alon, alat, aalt, F107, irtam_dir='',
 
     return (f2_b, f1_b, e_b, es_b, sun, mag, edp_b, f2_day, f1_day, e_day,
             es_day, edp_day)
+
+
+def derive_dependent_F1_parameters(P, NmF2, hmF2, B0, B1, hmE):
+    """Combine DA with background F1 region.
+
+    Parameters
+    ----------
+    P : array-like
+        Probability of F1 to occurre from PyIRI.
+    NmF2 : array-like
+        NmF2 parameter - peak density of F2 layer.
+    hmF2 : array-like
+        hmF2 parameter - height of the peak of F2.
+    B0 : array-like
+        B0 parameter - thickness of F2 in km.
+    B1 : array-like
+        B1 parameter - shape of F2.
+    hmE : array-like
+        hmE parameter - height of E layer.
+
+    Returns
+    -------
+    NmF1 : array_like
+        NmF1 parameter - peak of F1 layer.
+    foF1 : array_like
+        foF1 parameter - critical freqeuncy of F1 layer.
+    hmF1 : array_like
+        hmF1 parameter - peak height of F1 layer.
+    B_F1_bot : array_like
+        B_F1_bot - thickness of F1 layer.
+
+    Notes
+    -----
+    This function derives F1 from F2 fields.
+
+    """
+
+    # Estimate the F1 layer peak height (hmF1) as 0.4 between the F2 peak
+    # height (hmF2) and the E layer peak height (hmE)
+    hmF1 = hmF2 - (hmF2 - hmE) * 0.4
+
+    # Compute B_F1_bot using normalized probability P with a flexible
+    # threshold.
+    threshold = 0.1
+    P_clipped = np.clip(P, threshold, 1)
+    norm_shift = P_clipped - threshold
+    max_shift = np.max(norm_shift)
+    # Prevent division by zero
+    norm_shifted = np.divide(norm_shift,
+                             max_shift,
+                             out=np.zeros_like(norm_shift),
+                             where=max_shift != 0)
+    # Map to [0.5, 1], then to [0, 1]
+    norm_P = (np.clip(norm_shifted + 0.5, 0.5, 1) - 0.5) / 0.5
+    B_F1_bot = (hmF1 - hmE) * 0.5 * norm_P
+
+    # Find the exact NmF1 at the hmF1 using F2 bottom function with the drop
+    # down function
+
+    NmF1 = (Ramakrishnan_Rawer_function(NmF2, hmF2, B0, B1, hmF1)
+            * ml_up.drop_down(hmF1, hmF2, hmE))
+
+    # Convert plasma density to freqeuncy
+    foF1 = ml.den2freq(NmF1)
+
+    return NmF1, foF1, hmF1, B_F1_bot
+
+
+def IRTAM_EDP_builder_updated(x, aalt):
+    """Construct vertical EDP with continuous F1 layer.
+
+    Parameters
+    ----------
+    x : array-like
+        Array where 1st dimension indicates the parameter (total 11
+        parameters), second dimension is time, and third is horizontal grid
+        [11, N_T, N_G].
+    aalt : array-like
+        1-D array of altitudes [N_V] in km.
+
+    Returns
+    -------
+    density : array-like
+        3-D electron density [N_T, N_V, N_G] in m-3.
+
+    Notes
+    -----
+    This function builds the EDP from the provided parameters for all time
+    frames, all vertical and all horizontal points.
+
+    References
+    ----------
+    Forsythe et al. (2023), PyIRI: Whole-Globe Approach to the
+    International Reference Ionosphere Modeling Implemented in Python,
+    Space Weather.
+
+    """
+
+    # Number of elements in horizontal dimension of grid
+    ngrid = x.shape[1]
+
+    # vertical dimention
+    nalt = aalt.size
+
+    # Empty arrays
+    density_out = np.zeros((nalt, ngrid))
+    density_F2 = np.zeros((nalt, ngrid))
+    full_F1 = np.zeros((nalt, ngrid))
+    density_F1 = np.zeros((nalt, ngrid))
+    density_E = np.zeros((nalt, ngrid))
+
+    # Shapes:
+    # for filling with altitudes because the last dimensions should match
+    # the source
+    shape1 = (ngrid, nalt)
+
+    # For filling with horizontal maps because the last dimentsions should
+    # match the source
+    shape2 = (nalt, ngrid)
+
+    order = 'F'
+    NmF2 = np.reshape(x[0, :], ngrid, order=order)
+    NmF1 = np.reshape(x[1, :], ngrid, order=order)
+    NmE = np.reshape(x[2, :], ngrid, order=order)
+    hmF2 = np.reshape(x[3, :], ngrid, order=order)
+    hmF1 = np.reshape(x[4, :], ngrid, order=order)
+    hmE = np.reshape(x[5, :], ngrid, order=order)
+    B0 = np.reshape(x[6, :], ngrid, order=order)
+    B1 = np.reshape(x[7, :], ngrid, order=order)
+    B_F2_top = np.reshape(x[8, :], ngrid, order=order)
+    B_F1_bot = np.reshape(x[9, :], ngrid, order=order)
+    B_E_bot = np.reshape(x[10, :], ngrid, order=order)
+    B_E_top = np.reshape(x[11, :], ngrid, order=order)
+
+    # Set to some parameters if zero or lower:
+    B_F2_top[np.where(B_F2_top <= 0)] = 10
+
+    # Array of hmFs with same dimensions as result, to later search
+    # using argwhere
+    a_alt = np.full(shape1, aalt, order='F')
+    a_alt = np.swapaxes(a_alt, 0, 1)
+
+    # Fill arrays with parameters to add height dimension and populate it
+    # with same values, this is important to keep all operations in matrix
+    # form
+    a_NmF2 = np.full(shape2, NmF2)
+    a_NmF1 = np.full(shape2, NmF1)
+    a_NmE = np.full(shape2, NmE)
+    a_hmF2 = np.full(shape2, hmF2)
+    a_hmF1 = np.full(shape2, hmF1)
+    a_hmE = np.full(shape2, hmE)
+    a_B_F2_top = np.full(shape2, B_F2_top)
+    a_B0 = np.full(shape2, B0)
+    a_B1 = np.full(shape2, B1)
+    a_B_F1_bot = np.full(shape2, B_F1_bot)
+    a_B_E_top = np.full(shape2, B_E_top)
+    a_B_E_bot = np.full(shape2, B_E_bot)
+
+    # Drop functions to reduce contributions of the layers when adding them up
+    multiplier_down_F2 = ml_up.drop_down(a_alt, a_hmF2, a_hmE)
+    multiplier_down_F1 = ml_up.drop_down(a_alt, a_hmF1, a_hmE)
+    multiplier_up = ml_up.drop_up(a_alt, a_hmE, a_hmF2)
+
+    # ------F2 region------
+    # F2 top
+    a = np.where(a_alt >= a_hmF2)
+    density_F2[a] = ml.epstein_function_top_array(4. * a_NmF2[a], a_hmF2[a],
+                                                  a_B_F2_top[a], a_alt[a])
+    # F2 bottom down to E
+    a = np.where((a_alt < a_hmF2) & (a_alt >= a_hmE))
+    density_F2[a] = (Ramakrishnan_Rawer_function(a_NmF2[a], a_hmF2[a],
+                                                a_B0[a], a_B1[a], a_alt[a])
+                     * multiplier_down_F2[a])
+
+    # ------E region-------
+    a = np.where((a_alt >= a_hmE) & (a_alt < a_hmF2))
+    density_E[a] = ml.epstein_function_array(4. * a_NmE[a],
+                                             a_hmE[a],
+                                             a_B_E_top[a],
+                                             a_alt[a]) * multiplier_up[a]
+    a = np.where(a_alt < a_hmE)
+    density_E[a] = ml.epstein_function_array(4. * a_NmE[a],
+                                             a_hmE[a],
+                                             a_B_E_bot[a],
+                                             a_alt[a])
+
+    # Add F2 and E layers
+    density = density_F2 + density_E
+
+    # ------F1 region------
+    a = np.where((a_alt > a_hmE) & (a_alt < a_hmF1))
+    full_F1[a] = ml.epstein_function_array(4. * a_NmF1[a],
+                                           a_hmF1[a],
+                                           a_B_F1_bot[a],
+                                           a_alt[a]) * multiplier_down_F1[a]
+    # Find the difference between the EDP and the F1 layer and add to the EDP
+    # the positive part
+    density_F1 = full_F1 - density
+    density_F1[density_F1 < 0] = 0.
+
+    density = density + density_F1
+
+    # Make 1 everything that is <= 0 (just in case)
+    density[np.where(density <= 1.0)] = 1.0
+
+    return density
