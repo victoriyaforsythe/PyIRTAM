@@ -1266,7 +1266,7 @@ def derive_dependent_F1_parameters(P, NmF2, hmF2, B0, B1, hmE):
     return NmF1, foF1, hmF1, B_F1_bot
 
 
-def IRTAM_EDP_builder_updated(x, aalt):
+def IRTAM_EDP_builder_continuous(x, aalt):
     """Construct vertical EDP with continuous F1 layer.
 
     Parameters
