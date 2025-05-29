@@ -6,6 +6,7 @@ adheres to [Semantic Versioning](https://semver.org/).
 * Updated EDP construction and F1 layer model to be consistent with PyIRI
   v0.0.3 update.
 * Added a unit test for IRTAM_EDP_builder_continuous
+* Added the journal article DOI.
 
 ## 0.0.5 (10-24-2024)
 * Updated README to include instructions and fix DOI, Coverage badges
