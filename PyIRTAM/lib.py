@@ -652,7 +652,7 @@ def IRTAM_reconstruct_density_from_parameters(F2, F1, E, alt):
     x[10, :] = E['B_bot'][0, :]
     x[11, :] = E['B_top'][0, :]
 
-    EDP = IRTAM_EDP_builder_updated(x, alt)
+    EDP = IRTAM_EDP_builder_continuous(x, alt)
 
     return EDP
 
@@ -686,8 +686,9 @@ def IRTAM_EDP_builder(x, aalt):
     Space Weather.
 
     """
-    message = 'This function has been replaced by IRTAM_EDP_builder_updated and will be removed in version 0.0.7+'
-    warnings.warn(message,
+    message1 = "This function is replaced by IRTAM_EDP_builder_continuous"
+    message2 = " and will be removed in version 0.0.7+"
+    warnings.warn(message1 + message2,
                   DeprecationWarning, stacklevel=2)
 
     # Number of elements in horizontal dimension of grid

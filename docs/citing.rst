@@ -14,17 +14,18 @@ release.
 
 * Forsythe, V., et al. (2024).
   PyIRTAM: A New Module of PyIRI for IRTAM Coefficients,
-  Space Weather.
+  Space Weather,
+  doi: 10.1029/2024SW003965
 
 .. code-block:: latex
 
   @software{PyIRTAM,
     author       = {Forsythe, V. and
                     Burrell, A.G.},
-    title        = {victoriyaforsythe/PyIRTAM: v0.0.Xa (v0.0.Xa)},
+    title        = {victoriyaforsythe/PyIRTAM: v0.0.6 (v0.0.6)},
     year         = 2024,
     publisher    = {Zenodo},
-    version      = {v0.0.X},
+    version      = {v0.0.6},
     doi          = {10.5281/zenodo.10844521},
     url          = {https://github.com/victoriyaforsythe/PyIRTAM}
   }
