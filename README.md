@@ -12,20 +12,65 @@ Python tool for processing IRTAM coefficients that evaluates ionospheric
 parameters and electron density on the entire given global grid and for the
 entire day simultaneously.
 
-## Documentation
 
-PyIRTAM documentation can be found [here](https://pyirtam.readthedocs.io/en/latest/index.html)
+## Installation
 
-## Getting Started
+Install from PyPI:
 
-`pip install pyirtam`
+```bash
+pip install PyIRTAM
+```
 
-Or read the [installation guide](https://pyirtam.readthedocs.io/en/latest/installation.html)
+Or clone and install from the GitHub repository:
 
-## Examples of how to use PyIRTAM
+```bash
+git clone https://github.com/victoriyaforsythe/PyIRTAM.git
+cd PyIRTAM
+pip install .
+```
 
-Tutorials are available [examples](https://pyirtam.readthedocs.io/en/latest/examples.html)
+For more details and usage examples, see the Jupyter [tutorials](https://github.com/victoriyaforsythe/PyIRTAM/tree/main/docs/tutorials).
 
-## Jupyter tutorial
+---
 
-Tutorials with Jupyter are available [tutorials](https://github.com/victoriyaforsythe/PyIRTAM/tree/main/docs/tutorials)
+## Example: Daily Ionospheric Parameters (I have IRTAM coefficients)
+
+PyIRTAM computes daily ionospheric parameters with 15-min resolution IRTAM coefficietns.
+The user provides the F10.7 index for the day of interest, the **alon** and **alat** grid,
+the vertical grid **aalt**, and the time array of interest **ahr**.
+
+Define the F10.7 index in solar flux units (sfu):
+
+```python
+F107 = 90.8
+```
+
+Define day of interest:
+
+```python
+year = 2022
+month = 1
+day = 1
+```
+
+Run PyIRTAM (coefficients need to be placed in irtam_dir):
+
+```python
+(f2_iri, f1_iri, e_iri, es_iri, sun, mag, edp_iri, f2_irtam, f1_irtam,
+e_irtam, es_irtam, edp_irtam) = PyIRTAM.run_PyIRTAM(year, month, day, ahr,
+                                                    alon, alat, aalt, f107,
+                                                    irtam_dir=irtam_dir,
+                                                    use_subdirs=True,
+                                                    download=False)
+```
+
+<div align="center">
+  <img src="docs/figures/PyIRTAM_NmF2.png" width="45%">
+  <img src="docs/figures/PyIRTAM_hmF2.png" width="45%">
+</div>
+
+In case you need to download the coefficients use True in the download input.
+
+## Tutorials
+
+Tutorials with Notebooks are available [tutorials](https://github.com/victoriyaforsythe/PyIRTAM/tree/main/docs/tutorials)
