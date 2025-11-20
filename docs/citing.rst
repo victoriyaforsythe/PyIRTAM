@@ -22,10 +22,10 @@ release.
   @software{PyIRTAM,
     author       = {Forsythe, V. and
                     Burrell, A.G.},
-    title        = {victoriyaforsythe/PyIRTAM: v0.0.6 (v0.0.6)},
+    title        = {victoriyaforsythe/PyIRTAM: v0.0.7 (v0.0.7)},
     year         = 2024,
     publisher    = {Zenodo},
-    version      = {v0.0.6},
+    version      = {v0.0.7},
     doi          = {10.5281/zenodo.10844521},
     url          = {https://github.com/victoriyaforsythe/PyIRTAM}
   }
