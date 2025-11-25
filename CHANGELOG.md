@@ -4,7 +4,8 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ## 0.0.7 (11-20-2025)
 * The EDP construction is unified with PyIRI.
-* Min Python version is increased to 3.10 for PyIRI
+* Minimum Python version is increased to 3.10 for PyIRI
+* Updated NEP 29 testing specifications
 
 ## 0.0.6 (05-29-2025)
 * Updated EDP construction and F1 layer model to be consistent with PyIRI
