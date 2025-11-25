@@ -7,7 +7,7 @@ Prerequisites
 -------------
 
 PyIRTAM uses the Python modules included in the list below. This module
-officially supports Python 3.9+.
+officially supports Python 3.10+.
 
 1. numpy
 2. PyIRI
