@@ -1,4 +1,4 @@
-<img width="128" height="128" src="https://raw.githubusercontent.com/victoriyaforsythe/PyIRTAM/main/docs/figures/PyIRTAM_logo.png" alt="Black circle with PyIRTAM logo of two snakes marking the data-influenced EIA" title="PyIRTAM Logo" style="float:left;">
+<img width="200" height="200" src="https://raw.githubusercontent.com/victoriyaforsythe/PyIRTAM/main/docs/figures/PyIRTAM_logo.png" alt="Black circle with PyIRTAM logo of two snakes marking the data-influenced EIA" title="PyIRTAM Logo" style="float:left;">
 
 # PyIRTAM
 
